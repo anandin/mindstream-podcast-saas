@@ -1,0 +1,19 @@
+{
+  "story_count": 4,
+  "behavioral_concepts": 2,
+  "spirituality_concepts": 1,
+  "geo_toronto_pct": 40,
+  "geo_canada_pct": 25,
+  "geo_ai_tech_pct": 30,
+  "geo_world_pct": 50,
+  "voice_alex": "iP95p4xoKVk53GoZ742B",
+  "voice_maya": "EXAVITQu4vr4xnSDxMaL",
+  "audio_speed": 100,
+  "tts_provider": "elevenlabs",
+  "voice_direction_alex": "Speak like a late-night radio DJ \u2014 smooth, cool, and slightly mysterious.",
+  "voice_direction_maya": "You are Maya, an insightful and engaging female podcast host. Speak with natural warmth and intelligence \u2014 like you're having a fascinating conversation with a friend. Use expressive intonation, thoughtful pauses, and genuine reactions. Show enthusiasm when something is surprising or important. Be conversational and authentic, never robotic or flat.",
+  "script_model": "deepseek-v3.2",
+  "fallback_model": "gemini-3.1-pro",
+  "custom_voices": [],
+  "prompt_sections": {}
+}

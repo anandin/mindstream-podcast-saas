@@ -1,0 +1,174 @@
+[
+  {
+    "speaker": "SFX",
+    "text": "gentle lo-fi beat, a coffee machine hissing"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Last Tuesday, a materials scientist in a lab coat stared at a screen showing a protein structure that shouldn’t exist. It was pulled from a volcanic lake, and it could make disease tests ten times more sensitive."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And at that exact moment, a TTC planner was staring at a different screen, trying to decide between plastic and fabric for a bus seat. The future of public transit, hanging on a thread."
+  },
+  {
+    "speaker": "SFX",
+    "text": "short, suspenseful synth hit"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "This is Mind the Gap. I’m Alex, and with me is Maya. Today — how a hidden protein, a transit seat, a vanishing job, and an invisible cyberattack are all telling the same story about the stuff we build our world on."
+  },
+  {
+    "speaker": "SFX",
+    "text": "upbeat, jazzy transition music"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Okay, let’s start with the protein, because it’s wild. Scientists scanning genetic databases found these DNA-binding molecules in deep-sea vents and volcanic lakes. According to Science Daily, the lead researcher said, quote, ‘these proteins are built to survive extreme conditions.’"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Right. They’re molecular survivors. And the kicker? They’re being engineered to supercharge medical tests. Imagine a pregnancy-test-style strip that can detect a single cancer cell. That’s the promise."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "It’s infrastructure you can’t see, at the smallest possible scale. And it got me thinking… we’re obsessed with building flashy things—AI agents, smart cities—but sometimes the most revolutionary material is just… tougher glue."
+  },
+  {
+    "speaker": "SFX",
+    "text": "soft, thoughtful ambient pad"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Which brings us, somehow perfectly, to bus seats. The TTC is switching to plastic seats for easier cleaning. But Toronto’s new LRTs? They have fabric seats."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "One planner told the CBC, and I’m paraphrasing, ‘it’s about balancing durability, comfort, and… vibe.’ Fabric feels nicer, but plastic survives the… challenges of city life."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "It’s a micro-decision with macro-consequences. What is public transit, really? Is it a durable utility, or a comfortable experience? The seat fabric is the answer."
+  },
+  {
+    "speaker": "SFX",
+    "text": "sound of a bus door opening and closing"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And this is where the behavioural lens comes in. This is a classic case of present bias."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "The bias where we overweight immediate comfort?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Exactly. The nice fabric *feels* better today. But the plastic is the long-term play. It’s the protein from the volcano versus the comfy cotton. We’re constantly choosing between what feels good now and what lasts."
+  },
+  {
+    "speaker": "SFX",
+    "text": "melodic piano riff transitioning to next segment"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Now, let’s talk about what isn’t lasting: 84,000 Canadian jobs. Vanished in February. The steepest drop since 2009 outside the pandemic."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "The numbers are stark. The unemployment rate jumped to 6.7%. And the reaction online is… grim. Over on Reddit, one commenter in r/jobs wrote, ‘We just had the most layoffs last year since 2008 and 2026 is saying hold my beer.’"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "It’s a tremor in the foundation. And it’s happening while, as one economist put it to USA Today, the chance of a recession has ticked up, but only to about 25%. ‘Things would have to go pretty wrong,’ they said."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "But here’s the thing, Alex. When people see 84,000 jobs disappear, the *availability heuristic* kicks in hard."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "The mental shortcut where we judge probability by how easily examples come to mind."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Right. Vivid job loss headlines make a recession *feel* imminent, even if the statistical probability is still lower. Our brains are bad at holding both those truths at once."
+  },
+  {
+    "speaker": "SFX",
+    "text": "a beat of reflective silence"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And speaking of things that are hard to see but deeply destabilizing… let’s talk about invisible code. The Glassworm attack is back."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Researchers found malware hidden in invisible Unicode characters—blank spaces you can’t see—across 150 GitHub repositories. It’s a supply-chain attack. Poisoning the tools developers use to build everything else."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "China’s national cybersecurity team even issued a warning about similar flaws in an open-source AI agent called OpenClaw. The foundation is being sabotaged with… nothing. Empty space."
+  },
+  {
+    "speaker": "SFX",
+    "text": "eerie, digital glitch sound"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So we have invisible threats to software, extreme proteins for medicine, a debate over physical materials for our butts, and a job market that feels like it’s dissolving… what’s the thread?"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "It’s all about substrate. The layer underneath. The protein is the substrate for better health tests. The bus seat material is the substrate for urban livability. Jobs are the substrate for the economy. And clean code is the substrate for all our digital tools."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "We’re in a moment of substrate scrutiny. We spent years building amazing things on top, and now we’re looking down and asking: what is this actually built *on*? And is it strong enough? Or is it… invisible malware?"
+  },
+  {
+    "speaker": "SFX",
+    "text": "gentle, uplifting ambient music fades in"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "This connects to something ancient, actually. In Zen philosophy, there’s a focus on the ground of being. The fundamental reality beneath the chatter. Our modern ‘ground of being’ is these substrates—physical, digital, economic."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And when that ground feels shaky—when jobs vanish or code is poisoned—we get anxious. The Zen response isn’t to ignore the shaking, but to find equanimity within it. To focus on what you can actually build on."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Exactly. It’s about discerning the durable volcanic protein from the temporary comfy fabric. Not in a harsh way, but in a clear-eyed one."
+  },
+  {
+    "speaker": "SFX",
+    "text": "music swells slightly, then softens"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So here’s the takeaway as you start your day. Look for the substrates. What’s the bus seat material in your project? The invisible code in your process? The protein holding your team together?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And maybe… choose the volcanic protein. Build on the thing that lasts, even if the fabric feels nicer right now. Because the ground beneath us is everything."
+  },
+  {
+    "speaker": "SFX",
+    "text": "upbeat, closing theme music"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "That’s Mind the Gap for Monday, March 16th. I’m Alex."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And I’m Maya. We’ll see you tomorrow."
+  },
+  {
+    "speaker": "SFX",
+    "text": "music fades out"
+  }
+]

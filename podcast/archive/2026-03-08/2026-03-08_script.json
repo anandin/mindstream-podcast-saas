@@ -1,0 +1,126 @@
+[
+  {
+    "speaker": "SFX",
+    "text": "Wind gusting at high elevation, distant construction clang"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "One hundred and six stories above downtown Toronto. That's where the last steel beam was placed this week on the Pinnacle SkyTower — Canada's tallest building, ever. From up there, on a clear day, you can see all the way to the lake, all the way to the horizon."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "But if you could somehow zoom in on every screen inside every office below that tower this week, you'd see something else entirely. Oil at a hundred dollars a barrel. Stocks falling. Mortgage rates climbing. A war reshaping the basic math of everyday life."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "This is Mind the Gap. I'm Alex, and with me is Maya. Today — the same artificial intelligence that's helping college students write essays and finding browser security flaws is also picking bombing targets in the Middle East. And the shockwaves from that war are reaching your mortgage payment, your grocery bill, and a glass-and-steel tower that just became the tallest thing in Canada."
+  },
+  {
+    "speaker": "SFX",
+    "text": "Trading floor ambience, rapid keyboard clicks"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Let's start with the number that's rattling everything. Oil topped a hundred dollars a barrel — first time since 2022. The Financial Post reported crude climbed above that mark as, quote, 'escalating hostilities in the Middle East and mounting strain on oil shipping and infrastructure' sent markets reeling. The Strait of Hormuz — that narrow chokepoint for global oil — shipments have halted. The ripple effects are immediate."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And they're everywhere. In the UK, Nationwide, HSBC, and Coventry Building Society all hiked mortgage rates. In the US, bond yields surged. Here in Canada, the Globe and Mail is warning that 'elevated energy prices are in store as Middle East conflict intensifies.' And meanwhile — this one blew my mind, Alex — Canadians are actually borrowing more. The Globe and Mail reported that, quote, 'rather than paying down debt, Canadians are happily borrowing even deeper.'"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Which is remarkable when you look at the jobs picture. The February US employment report showed 92,000 jobs lost — worse than projections. NPR reported stocks fell on worries the economy could get, quote, 'stuck in a worst-case scenario of stagnating growth and high inflation.' That word — stagflation — it's back. Jezebel put it bluntly: 'We are now staring down the stagflationary barrel.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Over on Reddit, the mood matches. On r/Economics, one trending post describes an 'E-shaped economy' where the middle class is, quote, 'spending in a nervous way.' And on r/TorontoRealEstate, someone wrote, 'Think Toronto housing finds a bottom by the fall of 2026. Interest rate cuts are over, no more mortgage help. Investors in condos are underwater.' That's not panic, Alex. That's resignation."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And the Bank of Canada is signaling it could raise rates even in a slowdown. So the ground is shaking. And yet — someone placed the final beam on a 106-story tower."
+  },
+  {
+    "speaker": "SFX",
+    "text": "Glass curtain wall rattling, crane motor hum"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "The Pinnacle SkyTower, designed by Toronto's own Hariri Pontarini Architects, just topped out as the tallest skyscraper in Canada. Years of planning, billions of dollars, and a bet — a massive bet — that Toronto's future is worth building for. A monument to optimism in an anxious time."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And right alongside that physical monument, Canada's building something invisible but maybe just as significant. The Bank of Canada and the country's largest banks completed their first tokenized bond trial — Project Samara — issuing, trading, and settling bonds using digital Canadian dollars on a distributed ledger. So you've got this soaring concrete-and-glass bet on the future, and this digital infrastructure bet, happening simultaneously. While everything else wobbles."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And this is where I want to name what's happening in our heads. Anchoring. The behavioral economics concept Kahneman and Tversky identified. We're all anchored to what we think is normal — normal oil prices, normal interest rates, normal peace. When reality shifts dramatically, we keep making decisions based on the old anchor. That's why Canadians are still borrowing deeper. They're anchored to the belief that rates come back down, that home prices recover. That this is temporary."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Which connects to the most unsettling story this week. The very war driving oil to a hundred dollars? It's being shaped by AI. Moneycontrol reported the US military used Palantir's Maven AI system with Anthropic's Claude to generate and prioritize targets during Iran strikes. A thousand targets in twenty-four hours, Maya."
+  },
+  {
+    "speaker": "SFX",
+    "text": "Quiet office hum, soft typing"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Anthropic's Claude. The same AI. The Wall Street Journal reported it took Claude about twenty minutes to find its first Firefox browser bug during a security test for Mozilla — a vulnerability human engineers had missed. That same underlying technology is being used at Columbia University, where a freshman named Maximilian Milovidov is learning to write alongside AI in a course NPR covered. Instead of banning AI, his school teaches students to think critically with it."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So one AI system — finding software bugs in one context, teaching writing in another, selecting bombing targets in a third. The Pentagon reportedly even used a Microsoft workaround to test OpenAI models despite the company's ban on military use. The technology doesn't know what it's being used for. Same neural networks. Same token predictions. Wildly different consequences."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And this is where Michael Pollan enters. Scientific American published his argument this week that AI will never replicate human consciousness. He says the science of consciousness may ultimately be, quote, 'too subject to our own conscious minds to crack.' If he's right — if AI isn't conscious — then it's generating a thousand bombing targets with zero awareness of what death means. Optimizing without understanding."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Meanwhile the consequences are painfully real and deeply conscious. In India — which imports over eighty percent of its oil — the Sensex and Nifty rallied on hopes of de-escalation. But the RBI is quietly gathering data from banks on forex positions, trying to understand if major bets are being placed against the rupee. They're buying bonds to steady yields, offsetting liquidity drained by their own forex interventions. A hundred-dollar barrel hits Mumbai harder than Manhattan."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And here's the second behavioral concept — loss aversion. Losses hurt roughly twice as much as equivalent gains feel good. Right now, everyone is in loss territory. Canadian condo investors underwater. Indian importers watching costs soar. American workers who just lost their jobs. Loss aversion makes us irrational — we hold losing positions too long, borrow more to avoid admitting the loss. The Globe and Mail's advice to investors? Quote, 'Be flexible and understand that it could get worse before it gets better.'"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Not exactly a hug, Maya."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "No. But here's where I want to go somewhere deeper. The Marginalian resurfaced Octavia Butler's writing this week — on change and the meaning of God. Butler's whole Earthseed philosophy centers on the idea that the fundamental, inescapable truth of existence is change. Not gentle change. Fierce, indifferent, constant change. The tower going up and the market going down — same force. The AI that helps you write and the AI that selects a target — same force, expressing itself differently."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "That sounds like Buddhist impermanence."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "It is. Anicca — the Pali word. Nothing holds its form. And the spiritual invitation isn't to pretend that's fine — it's to stop being surprised by it. Anchoring and loss aversion are both ways we resist impermanence, Alex. We cling to what was. The old price. The old rate. The old peace. And the clinging is what creates suffering — not the change itself."
+  },
+  {
+    "speaker": "SFX",
+    "text": "High-altitude wind, city murmur far below"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So let's go back to that tower. One hundred and six stories. A building that took years to rise, that will stand for decades, conceived and financed and completed during one of the most uncertain stretches in recent memory."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "The people who designed it, who financed it, who placed that last beam — they didn't wait for certainty. They built knowing oil prices would swing, rates would shift, wars would start and end. They built knowing everything is impermanent and deciding that building still matters."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Maybe that's the takeaway. Whether you're the Bank of Canada experimenting with tokenized bonds, a freshman at Columbia learning to write alongside AI, or just someone checking their mortgage rate this morning and wincing — the question isn't whether things will change. They will. The question is what you choose to build anyway."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And maybe — before you check that rate — take one breath. Notice the anchor pulling you toward what used to be. Notice the loss aversion tightening your chest. And then decide from here. Not from where things were. From here."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "From the top of the tallest building in Canada… this is Mind the Gap."
+  }
+]

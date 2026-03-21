@@ -1,0 +1,302 @@
+[
+  {
+    "speaker": "SFX",
+    "text": "sound of glass shattering, muffled cheers in background"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "It's five-thirty on a Tuesday in midtown Manhattan. A woman in a blazer is winding up with a baseball bat. She takes a full swing at a stack of dinner plates. Her coworkers are cheering. This... is happy hour now."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Not a bar. Not a bowling alley. A rage room. And according to Business Insider, in an era of layoffs and AI anxiety, smashing things has become corporate America's newest coping mechanism."
+  },
+  {
+    "speaker": "SFX",
+    "text": "upbeat morning show theme music kicks in"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "This is Mind the Gap. I'm Alex, and with me is Maya. Today — why are humans smashing plates while AI agents build their own social networks... and what does a 132-billion-dollar pension fund know that the rest of us don't?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "OK I love that framing. So let's start with the smashing. Rage rooms have been around for a while, but Business Insider is reporting they've gone fully corporate. Companies are booking them for team offsites. It's structured destruction as stress relief."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And the timing is not random, Maya. This is happening alongside a phenomenon researchers are now calling — and I love this word — 'brain fry.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Oh, I saw this! Axios reported on it, and their framing is perfect. Quote: 'From the researchers who brought you workslop comes another new term for an AI downside — brain fry, defined as mental fatigue from excessive use or oversight of AI tools beyond one's cognitive capacity.'"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So companies push AI on their workers. The workers get mentally fried trying to oversee these tools. Then the companies book rage rooms so the workers can blow off steam. Does anyone else see the irony?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "The circle of corporate life! But Alex — it gets better. Over at Block, Jack Dorsey's company, they did mass layoffs saying AI could handle the work. And according to The Guardian, the staff reaction was... not subtle."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Right — The Guardian reported the announcement was met with, quote, 'hundreds of thumbs-downs, tomatoes, middle fingers, and clown faces' from employees. And current workers are saying — I love this — quote, 'you can't really AI that.'"
+  },
+  {
+    "speaker": "SFX",
+    "text": "record scratch sound"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "'You can't really AI that.' That might be the most 2026 sentence ever spoken."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "It's going on a t-shirt. But OK — here's where it gets truly weird. While humans are literally smashing things because AI is stressing them out... AI agents are getting their own social network."
+  },
+  {
+    "speaker": "SFX",
+    "text": "dramatic synth stinger"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "I'm sorry — what now?"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Meta just acquired Moltbook. The Verge describes it as a 'Reddit-like platform where AI agents can make and comment on posts.' Not humans pretending to be bots. Actual AI agents... posting, commenting, building community."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So we've built AI agents their own Reddit. While actual humans on actual Reddit are having existential crises about AI taking their jobs. The irony is... thick."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Meta spokesperson Matthew Tye confirmed the acquisition to The Verge. And look — this isn't just a curiosity. This is infrastructure. If AI agents are going to coordinate, negotiate, and transact on our behalf, they need somewhere to interact."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "A digital town square for digital minds. That's simultaneously fascinating and deeply unsettling."
+  },
+  {
+    "speaker": "SFX",
+    "text": "short futuristic electronic transition"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And it's part of a much bigger wave. Nvidia announced they're building an open-source AI agent platform. Wired reports Nvidia is, quote, 'readying a new approach to software that embraces AI agents.' This will be huge at their developer conference."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So Nvidia's building the platform, Meta's buying the social layer..."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And in China, the gold rush is already here. MIT Technology Review profiled a 27-year-old software engineer in Beijing named Feng Qingyang who's building on OpenClaw — the open-source agent framework that's taken China by storm."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Oh, I read this! The quote was perfect — quote, 'Feng Qingyang had always hoped to launch his own company, but he never thought this would be how — or that the day would come this fast.'"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "MIT Technology Review calls them hustlers — their word — cashing in on the AI agent craze. It's like the early app store days, but for AI agents instead of Angry Birds."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And the timeline trackers online are noting that, quote, 'top AI labs privately target AGI by 2027 to 2028' with 'capability jumps accelerating faster than public forecasts admit.' The urgency is palpable."
+  },
+  {
+    "speaker": "SFX",
+    "text": "gentle lo-fi beat fading in underneath"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "OK Maya, let me zoom out. Humans smashing plates because AI is stressing them out. AI agents getting their own social network. A global gold rush to build agent platforms. Everything's moving at breakneck speed. And..."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And everyone has present bias."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "There it is. The behavioral turn."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Present bias — also called hyperbolic discounting — is our tendency to massively overweight immediate rewards over future ones. That 27-year-old in Beijing? He dropped everything because the opportunity felt urgent. Companies booking rage rooms? Quick fix for a deep problem."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "The discount rate on the future is... steep right now."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And there's a second bias in play — automation bias. Our tendency to over-trust automated systems. Jack Dorsey assumed AI could replace his employees. But as those Block workers said — 'you can't really AI that.' Automation bias is what happens when leaders trust the algorithm more than the people who actually do the work."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And then you end up needing rage rooms for the people who are left."
+  },
+  {
+    "speaker": "SFX",
+    "text": "soft ambient pad, a beat of reflective silence"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "...yeah. Let that sit for a second."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "OK but Maya — there's one more thread here, and it's the one that actually gives me hope. It's right here in Toronto."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "HOOPP."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "HOOPP! The Healthcare of Ontario Pension Plan just announced net assets have reached 132 billion dollars. Billion with a B. Nearly half invested right here in Canada. Membership now exceeding 500,000."
+  },
+  {
+    "speaker": "SFX",
+    "text": "short warm piano riff"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Five hundred thousand healthcare workers in Ontario — nurses, technicians, hospital staff — with their retirement secured by this quiet giant. While the rest of the world is... smashing plates."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And here's what I love. While everyone else chases the AI agent gold rush, while companies panic-adopt AI and then book rage rooms for the fallout — HOOPP is just compounding. Slowly. Patiently. Year after year."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "It's the anti-present-bias! It's 500,000 people whose future selves are being taken care of by a system designed to resist the urge to chase every shiny thing."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And think about the context. The GTA housing market is in this weird limbo — TRREB shows sales fell 6.3 percent year over year. One analyst on LinkedIn described it as, quote, 'a market waiting for its next move.' Buyers on the sidelines, rates uncertain..."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And in that uncertainty, this pension fund just... does its thing. 132 billion dollars of patience."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Meanwhile, behavioral research keeps confirming what HOOPP figured out decades ago. One study making the rounds noted that, quote, 'one of the biggest impediments to building savings isn't income — it's self-control in the face of present-tense desires.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Which is literally present bias! The pension structure removes the self-control problem entirely. You don't have to resist the present — the system does it for you. It's a nudge so elegant it's almost invisible."
+  },
+  {
+    "speaker": "SFX",
+    "text": "soft contemplative ambient tone"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So we've got rage rooms, robot Reddit, a global AI gold rush, and a 132-billion-dollar pension fund. How do these connect, Maya?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "They're all answers to the same question: how do you navigate a world moving faster than your nervous system was designed for? Some people smash plates. Some chase the OpenClaw hustle. Some algorithms build their own social networks. And some systems just... compound quietly."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So which approach actually works?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "This is where I want to bring in something I've been reading. Mindful.org just published a conversation with Margaret Cullen — she's a mindfulness teacher and therapist — called 'Beyond Mindfulness: On Equanimity and Quiet Strength.' And the framing stopped me cold."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Equanimity. Not a word you hear at a rage room happy hour."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Ha! No. And Cullen's whole point is we've misunderstood equanimity. It's not about being calm or passive or checked out. It's about meeting intensity without being overwhelmed by it. Quiet strength — staying present when everything around you is accelerating."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "That sounds like the pension fund version of wisdom."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "That's exactly it! HOOPP is institutional equanimity. It meets market chaos — oil volatility, rate uncertainty, housing wobbles — without flinching. It doesn't smash plates. It doesn't chase the latest AI hustle. It compounds."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And for the individual? What's the personal equivalent?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Recognizing that the urge to react — to smash something, to chase the gold rush, to panic about AI — that urge is present bias talking. Equanimity is the practice of noticing that urge... and choosing the longer game."
+  },
+  {
+    "speaker": "SFX",
+    "text": "soft ambient pad, a breath of reflective silence"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "...I like that. Noticing the urge and choosing the longer game."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And look — I'm not saying rage rooms are bad! Sometimes you need to smash a plate. But if plate-smashing is your only strategy... you might also want to build a pension."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Metaphorical or literal?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Both! Honestly, both."
+  },
+  {
+    "speaker": "SFX",
+    "text": "upbeat transition beat"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "OK let's bring it home. Picture that woman in the blazer from our opening. She's just smashed her last plate. Coworkers high-fiving. She feels great for about twenty minutes. Then she checks her phone — fourteen Slack notifications from the AI tool she's supposed to be overseeing."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Brain fry is waiting."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "But what if she also knew that somewhere in Ontario, half a million healthcare workers sleep soundly because a system compounds patiently on their behalf? What if the real power move in 2026 isn't smashing things or chasing things... but building things that compound?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Today's takeaway: notice your present bias. When you feel the urge to react to the latest AI headline, the latest market swing, the latest workplace disruption — pause. Ask yourself: am I smashing plates, or am I compounding?"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And if the answer is smashing plates... at least wear safety goggles."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Always. Safety first, then equanimity."
+  },
+  {
+    "speaker": "SFX",
+    "text": "upbeat closing theme music with energy"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "That's Mind the Gap for Wednesday, March 11th, 2026. We'll be back tomorrow morning with more coffee-fueled clarity."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Go compound something today. We'll see you tomorrow."
+  },
+  {
+    "speaker": "SFX",
+    "text": "theme music swells briefly then fades out"
+  }
+]

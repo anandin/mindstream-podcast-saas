@@ -1,0 +1,266 @@
+[
+  {
+    "speaker": "SFX",
+    "text": "Steam press hissing in a small shop"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Somewhere in Toronto's Riverside neighbourhood right now, a steam press is hissing for one of the very last times. Better Way Cleaners — sixty years, one family, countless pressed shirts — is closing its doors later this month."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Sixty years, Alex. That business opened before the internet. Before email, before anyone on Earth worried about oil hitting a hundred dollars a barrel. And now it's just... done."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "This is Mind the Gap. I'm Alex, and with me is Maya. Today — why the things we trust most are suddenly the most fragile, from a family dry cleaner to the price of crude oil to the very concept of artificial intelligence."
+  },
+  {
+    "speaker": "SFX",
+    "text": "News ticker and coffee shop ambience"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "OK let's start with the big one. Oil prices absolutely erupted this week. NPR reported crude spiked to nearly a hundred and twenty dollars a barrel Monday, and world shares tumbled — Japan's Nikkei plunged more than five percent."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Wait — a hundred and twenty dollars?"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Yeah, the Iran war is rattling commodity markets in a way we haven't seen since the Ukraine invasion. And CNN's economists are warning that the war has, quote, 'increased the risk of a recession,' and 'the longer the crisis lasts, the greater the danger to an economy that already looked vulnerable.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Already looked vulnerable. That's the phrase doing all the heavy lifting there."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Exactly. Now here's the whiplash. By market close, the Globe and Mail noted oil had its steepest one-day drop in four years — down more than eleven percent — because G7 energy ministers asked the IEA to examine releasing strategic reserves."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So we went from panic to partial relief in a single trading day. That is 2026 in a nutshell."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And the damage to sentiment? Already done. Newsweek says recession odds are spiking in prediction markets. And get this — there's an AI sentiment tracker called RecessionRadar.ai — yes, that's real — showing a public mood score of forty-three out of a hundred."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Forty-three. That's the emotional equivalent of a yellow traffic light that's been yellow for way, way too long."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Ha! And Reddit sentiment is averaging negative point three four two. People are not vibing, Maya."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And the Jezebel headline really captured the political dimension — Trump is reportedly panicking over the threat of five-dollar gasoline and surging inflation, watching, quote, 'the GOP's midterm chances go up in an expensive fireball.'"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Meanwhile, over on Morningstar — and this is the twist — some Fed officials are actually focused on raising interest rates. That's a major reversal from just a few months ago when cuts looked like a given for 2026."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Oh wow. So the Fed potentially going up while markets are screaming for relief?"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Welcome to the central banker's nightmare. And it gets more complicated when you zoom into Toronto."
+  },
+  {
+    "speaker": "SFX",
+    "text": "TTC streetcar bell dinging"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Because that oil anxiety isn't abstract when you're living in the most expensive city in Canada."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Not even close to abstract. Bloomberg reported that Toronto home prices have declined for a ninth straight month. Nine months of persistent economic uncertainty, quote, 'sapping confidence in the market.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Nine straight months. And yet..."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And yet! Over on r/toronto, one user did the painful math. Quote: 'Average price in January 2015 was five fifty-two thousand. Average price in February 2026 was one million eight thousand nine hundred sixty-eight.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So even after nine months of decline, prices are still nearly double what they were a decade ago. The decline feels massive but the baseline is still enormous."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And a University Magazine breakdown says a single adult needs seventy-five to eighty-five thousand dollars just to live comfortably in Toronto. Families? A hundred thirty to a hundred sixty thousand."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "That's... comfort, not luxury. That's 'I can afford groceries and occasionally see a movie' money."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Right. And on LinkedIn, there's a trending post headlined, quote, 'Breaking: The Bank of Canada Just Fixed the Economy (Again)' — with that word 'fixed' doing enormous sarcastic work. They note a rate cut 'could offer some relief to borrowers, but it raises questions about how Canada can balance growth and long-term economic stability.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So the Bank of Canada might cut while the Fed might hike. That divergence is going to do interesting things to the Canadian dollar."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Interesting is one word for it. Terrifying is another. OK Maya — pivot with me, because sitting right next to all this economic anxiety is something wild happening with AI."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "The poll. We have to talk about the poll."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "NBC put out a new poll and — I had to read this twice — AI is one of the least-liked things in America. Both CNET and Gizmodo confirmed: AI is viewed less positively than ICE, less positively than President Trump. The only things less popular are Iran and the Democratic Party."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "AI is less popular than the agency conducting deportations. That is a sentence I did not expect to say on a Tuesday morning."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And yet — corporations are going all in. Business Insider reports we're now in the 'next phase of the corporate AI boom,' which is literally measuring which employees actually understand AI. Companies are testing their workers."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "It's like the most unpopular kid in school getting elected class president anyway."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Ha! Perfect. And it gets messier. Anthropic — the company behind Claude — is suing the Department of Defense. Wired reports the Trump administration escalated a contract dispute into a full federal ban on their technology."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So the public hates AI, the government is trying to ban one AI company, and corporations are simultaneously racing to adopt it and using it as cover to lay people off?"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Bingo. Financial Express is tracking over thirty-five thousand tech layoffs globally in 2026 so far — Meta, Oracle, Amazon — all framed as 'AI-driven restructuring.' And Business Insider had this killer line about layoffs feeling 'awfully tempting' for companies right now, with some CEOs seeing cuts as a way to, quote, 'be seen as AI-savvy.'"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "OK wait — firing humans to look like you understand AI? That's not strategy. That's performance art."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Expensive performance art. Meanwhile, over on Reddit's GPT3 community, people are buzzing about Sam Altman predicting that 2026 and 2027 will be 'the AI revolution for enterprises.' He says we may be only a couple of years away from early versions of superintelligence."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "So the hype machine and the backlash machine are running at full speed simultaneously."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "In the same news cycle! And here's the beautiful irony — Business Insider also reports that management, quote, 'has been a casualty of AI,' but now 'the rise of AI agents still requires their management and oversight.' We fired the managers and now we need managers again."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "The circle of corporate life. Alex, this is where my behavioural science brain catches fire, because there are two biases colliding beautifully across all of these stories."
+  },
+  {
+    "speaker": "SFX",
+    "text": "Espresso machine whirring"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Go. I'm ready."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "First — the availability heuristic. CEOs are reading the same headlines we are. Every day it's 'AI replaces this,' 'AI does that better.' That constant stream makes AI displacement feel more probable and more urgent than it might actually be. The most available information distorts the decision."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So the more AI headlines they see, the more inevitable the layoffs feel — even if the data doesn't support it yet?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Exactly. And it works the same way with recession fear. That RecessionRadar showing forty-three out of a hundred? People aren't calculating recession probability from first principles. They're reacting to oil spike headlines and layoff stories because those are vivid and available."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And the second bias?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Loss aversion. That NBC poll showing AI less popular than ICE? People aren't evaluating AI rationally on balance. They're feeling potential losses — my job, my relevance, my agency — roughly twice as intensely as equivalent gains. Kahneman showed us this decades ago. Losses hurt at two X."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So even if AI creates twice as many opportunities as it destroys, the emotional math still comes out negative?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "As long as the losses are vivid and personal, yes. You feel your own potential job loss at two X intensity. You read about someone else's new AI-created role at half X. The asymmetry is baked into our neurology."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "OK so let me try to stitch these four threads together. We've got oil swinging wildly, Toronto housing declining for nine months, AI simultaneously hated and forcefully adopted, and a sixty-year-old dry cleaner closing. What's the connective tissue, Maya?"
+  },
+  {
+    "speaker": "SFX",
+    "text": "Gentle morning birdsong, distant traffic"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "It's impermanence. And I don't mean that in a hand-wavy way. Buddhist philosophy has this concept — anicca — that all conditioned things are in constant flux. The suffering isn't the change itself. It's our surprise at the change. Our insistence that things should stay."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "Better Way Cleaners lasted sixty years. That feels permanent. Oil at seventy dollars felt permanent. Your job feeling safe from AI felt permanent."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Right. And that Yale study that just dropped is so relevant here. They found that when parents practiced mindfulness and stress-management skills, their children showed healthier eating patterns. The mechanism isn't mystical — when you reduce your reactivity to uncertainty, your stress hormones drop and you make better decisions."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So the parents who could sit with 'things are uncertain right now' actually did better than the parents fighting the uncertainty?"
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Exactly. And I think that maps onto everything we've discussed today. The Bank of Canada trying to engineer certainty through rate moves. CEOs panic-firing to look AI-savvy instead of adapting thoughtfully. Homeowners anchoring to that 2015 price of five fifty-two thousand — using a decade-old number as their reference point for what's 'normal.'"
+  },
+  {
+    "speaker": "ALEX",
+    "text": "And something new will open in Better Way Cleaners' space. Something we can't predict yet. Because that's what impermanence actually means — it's not just loss. It's also the thing that makes room for what comes next."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "And Oracle just beat their revenue estimates. Reddit posted its first full year of GAAP profitability. The creator economy has seventeen startups VCs are watching. New things are growing in the spaces old things are leaving."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "So here's your Tuesday takeaway. Whether it's oil prices, AI adoption, your housing value, or your career — the anchor you're using might be outdated, the headlines triggering your anxiety might be exploiting your availability heuristic, and the change you're resisting? It's the one thing that's truly guaranteed."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "Sit with it. Like a really good dry cleaner — press through the wrinkles. Don't fight the fabric."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "That might be the best metaphor we've ever landed on this show."
+  },
+  {
+    "speaker": "MAYA",
+    "text": "I'm riding that one all day."
+  },
+  {
+    "speaker": "ALEX",
+    "text": "This has been Mind the Gap. Go press some wrinkles, Toronto."
+  },
+  {
+    "speaker": "SFX",
+    "text": "TTC streetcar rumbling past, fading out"
+  }
+]
