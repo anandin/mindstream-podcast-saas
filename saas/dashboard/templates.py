@@ -13,7 +13,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mind the Gap - Podcast Dashboard</title>
+    <title>Mind Stream - Podcast Dashboard</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; min-height: 100vh; }
@@ -120,7 +120,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <body>
     <div class="container">
         <header>
-            <div class="logo">🎙️ Mind the Gap</div>
+            <div class="logo">🎙️ Mind Stream</div>
             <div class="user-menu">
                 <div class="user-info">
                     <div id="user-email">user@example.com</div>
@@ -829,7 +829,7 @@ LOGIN_HTML = """<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Mind the Gap</title>
+    <title>Login - Mind Stream</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { 
@@ -864,7 +864,7 @@ LOGIN_HTML = """<!DOCTYPE html>
 <body>
     <div class="login-container">
         <div class="logo">
-            <h1>🎙️ Mind the Gap</h1>
+            <h1>🎙️ Mind Stream</h1>
             <p>SaaS Podcast Generator</p>
         </div>
         
@@ -913,7 +913,7 @@ LOGIN_HTML = """<!DOCTYPE html>
     </div>
 
     <script>
-        const API_BASE = '/api';
+        const API_BASE = '/api/v1';
         let currentTab = 'login';
         
         function showTab(tab) {

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Mind the Gap SaaS - Main Application
+Mind Stream SaaS - Main Application
 =====================================
 Run: python -m saas.app
 
@@ -35,7 +35,7 @@ init_db(DATABASE_URL)
 
 # Create main app
 app = FastAPI(
-    title="Mind the Gap SaaS",
+    title="Mind Stream SaaS",
     description="AI-Powered Podcast Generation Platform",
     version="1.0.0"
 )
@@ -68,7 +68,7 @@ async def root():
     return """
     <!DOCTYPE html>
     <html>
-    <head><title>Mind the Gap SaaS</title></head>
+    <head><title>Mind Stream SaaS</title></head>
     <body>
         <script>window.location.href = '/dashboard';</script>
     </body>

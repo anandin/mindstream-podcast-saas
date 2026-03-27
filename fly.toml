@@ -1,11 +1,17 @@
-app = "mind-the-gap-saas"
+app = "mind-stream"
 
 [http_service]
   http_service = true
   internal_port = 8000
   auto_stop_machines = false
-  auto_start_machines = false
+  auto_start_machines = true
 
 [env]
   PYTHONUNBUFFERED = "1"
   PYTHONPATH = "/app"
+
+[deploy]
+  release_command = "python -c 'from saas.db.models import init_db; from saas.db.database import engine; init_db(engine)'"
+
+[processes]
+  app = "python -m uvicorn saas.app:app --host 0.0.0.0 --port 8000"

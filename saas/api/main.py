@@ -48,7 +48,7 @@ init_db(DATABASE_URL)
 
 # Create FastAPI app
 app = FastAPI(
-    title="Mind the Gap SaaS API",
+    title="Mind Stream SaaS API",
     description="Podcast generation API for SaaS",
     version="1.0.0"
 )

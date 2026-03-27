@@ -1,0 +1,49 @@
+name: Deploy to Fly.io
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r saas/requirements.txt
+
+      - name: Install Fly.io
+        uses: superfly/flyctl-actions/setup-flyctl@master
+
+      - name: Get API Key
+        run: flyctl auth token
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Deploy to Fly.io
+        run: |
+          flyctl deploy --remote-only \
+            --app mind-stream \
+            --env PYTHONPATH=/app \
+            --env PYTHONUNBUFFERED=1 \
+            --secret JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+            --secret DATABASE_URL=${{ secrets.DATABASE_URL }} \
+            --secret API_SECRET=${{ secrets.API_SECRET }}
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Verify deployment
+        run: |
+          sleep 5
+          curl -s https://mind-stream.fly.dev/health || exit 1
