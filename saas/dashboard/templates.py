@@ -229,16 +229,22 @@ DASHBOARD_HTML = """<!DOCTYPE html>
                     <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
                 </div>
                 
-                <div class="card">
+                <div class="card" style="border-color: #58a6ff; box-shadow: 0 0 20px rgba(88, 166, 255, 0.1);">
                     <div class="card-header">
-                        <span class="card-title">Default TTS Settings</span>
+                        <span class="card-title">🎙️ Voice Settings</span>
+                        <span class="badge badge-pro">Recommended</span>
                     </div>
                     <div class="form-group">
                         <label class="form-label">TTS Provider</label>
                         <select class="form-select" id="settings-tts-provider">
-                            <option value="elevenlabs">ElevenLabs</option>
+                            <option value="elevenlabs">ElevenLabs (Premium)</option>
+                            <option value="voxtral">Voxtral (High Quality)</option>
+                            <option value="minimax">MiniMax (Budget)</option>
                             <option value="openai">OpenAI TTS</option>
                         </select>
+                        <small style="color: #8b949e; font-size: 12px; margin-top: 4px; display: block;">
+                            Pro users get 11Labs, Growth gets Voxtral, Free uses MiniMax by default
+                        </small>
                     </div>
                     <div class="form-group">
                         <label class="form-label">Default Host 1 Voice</label>
@@ -349,7 +355,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
                 <div class="form-group">
                     <label class="form-label">TTS Provider</label>
                     <select class="form-select" id="podcast-tts">
-                        <option value="elevenlabs" selected>ElevenLabs</option>
+                        <option value="elevenlabs" selected>ElevenLabs (Premium)</option>
+                        <option value="voxtral">Voxtral (High Quality)</option>
+                        <option value="minimax">MiniMax (Budget)</option>
                         <option value="openai">OpenAI TTS</option>
                     </select>
                 </div>
@@ -359,7 +367,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
                 </div>
                 <div style="display: flex; gap: 10px; justify-content: flex-end;">
                     <button type="button" class="btn btn-secondary" onclick="closeModal('podcast-modal')">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Create Podcast</button>
+                    <button type="submit" id="btn-create-podcast" class="btn btn-primary">Create Podcast</button>
                 </div>
             </form>
         </div>
@@ -936,6 +944,11 @@ LOGIN_HTML = """<!DOCTYPE html>
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
             
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Signing in...';
+            submitBtn.disabled = true;
+            
             try {
                 const response = await fetch(API_BASE + '/auth/login', {
                     method: 'POST',
@@ -953,6 +966,8 @@ LOGIN_HTML = """<!DOCTYPE html>
                 window.location.href = '/dashboard';
             } catch (e) {
                 showError(e.message);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         }
         
@@ -962,6 +977,11 @@ LOGIN_HTML = """<!DOCTYPE html>
             const password = document.getElementById('register-password').value;
             const name = document.getElementById('register-name').value;
             const company = document.getElementById('register-company').value;
+            
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Creating account...';
+            submitBtn.disabled = true;
             
             try {
                 const response = await fetch(API_BASE + '/auth/register', {
@@ -977,9 +997,12 @@ LOGIN_HTML = """<!DOCTYPE html>
                 
                 const data = await response.json();
                 localStorage.setItem('access_token', data.access_token);
+                // Immediate redirect - faster perceived performance
                 window.location.href = '/dashboard';
             } catch (e) {
                 showError(e.message);
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         }
     </script>
