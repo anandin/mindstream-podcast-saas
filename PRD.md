@@ -77,9 +77,9 @@ The same backend (podcast generation pipeline) can be wrapped as **5 different p
 **Pricing:**
 | Tier | Price | Features |
 |------|-------|----------|
-| Free | $0 | 3 scripts/month, watermark, 1 voice |
-| Pro | $29/mo | Unlimited scripts, no watermark, voice preview, publish |
-| Studio | $79/mo | + Custom voices, team sharing (3 seats), priority generation |
+| Free | $0 | 3 scripts/month, Voxtral voice | Standard |
+| Pro | $29/mo | Unlimited scripts, 11Labs voice, no watermark, voice preview, publish | Premium |
+| Studio | $79/mo | + Custom voices (11Labs), team sharing (3 seats), priority | Premium |
 
 ---
 
@@ -131,10 +131,10 @@ The same backend (podcast generation pipeline) can be wrapped as **5 different p
 **Pricing:**
 | Tier | Price | API Calls | Features |
 |------|-------|-----------|----------|
-| Dev | $0 | 100/mo | Full API, watermarked |
-| Growth | $49/mo | 2,000/mo | No watermark, webhooks, priority |
-| Scale | $199/mo | 10,000/mo | Custom voices, SLA, dedicated support |
-| Enterprise | Custom | Unlimited | White-label, MCP, custom SLAs |
+| Dev | $0 | 100/mo | Full API, watermarked, Voxtral voice | Standard |
+| Growth | $49/mo | 2,000/mo | No watermark, webhooks, priority, Voxtral | High |
+| Scale | $199/mo | 10,000/mo | 11Labs voices, SLA, dedicated support | Premium |
+| Enterprise | Custom | Unlimited | White-label, MCP, custom SLAs, custom voices | Premium |
 
 ---
 
@@ -186,9 +186,9 @@ The same backend (podcast generation pipeline) can be wrapped as **5 different p
 **Pricing:**
 | Tier | Price | Features |
 |------|-------|----------|
-| Solo | $19/mo | Unlimited recordings, auto-publish, private feed |
-| Pro | $49/mo | + Custom intro/outro, analytics, guest episodes |
-| Brand | $149/mo | + White-label feed, branded app, team (5 seats) |
+| Solo | $19/mo | Unlimited recordings, auto-publish, private feed, 11Labs voice | Premium |
+| Pro | $49/mo | + Custom intro/outro, analytics, guest episodes | Premium |
+| Brand | $149/mo | + White-label feed, branded app, team (5 seats) | Premium |
 
 ---
 
@@ -240,9 +240,9 @@ The same backend (podcast generation pipeline) can be wrapped as **5 different p
 **Pricing:**
 | Tier | Price | Shows | Team Seats | Features |
 |------|-------|-------|-----------|----------|
-| Starter | $99/mo | 3 | 5 | Full platform, standard voices |
-| Growth | $299/mo | 10 | 15 | + Workflow, bulk, API |
-| Agency | $799/mo | Unlimited | 50 | + White-label, SLA |
+| Starter | $99/mo | 3 | 5 | Full platform, Voxtral voices | High |
+| Growth | $299/mo | 10 | 15 | + Workflow, bulk, API, 11Labs voices | Premium |
+| Agency | $799/mo | Unlimited | 50 | + White-label, SLA, 11Labs voices | Premium |
 | Enterprise | Custom | Unlimited | Unlimited | + Dedicated infra, custom contracts |
 
 ---
@@ -294,9 +294,58 @@ The same backend (podcast generation pipeline) can be wrapped as **5 different p
 **Pricing:**
 | Tier | Price | Features |
 |------|-------|----------|
-| Personal | $0 | 10 casts/month, personal library, basic voices |
-| Scholar | $14/mo | Unlimited casts, research format, advanced voices |
-| Academic | $39/mo | + Cite sources, PDF import, study modes |
+| Personal | $0 | 10 casts/month, personal library, MiniMax voice | Standard |
+| Scholar | $14/mo | Unlimited casts, research format, Voxtral voice | High |
+| Academic | $39/mo | + Cite sources, PDF import, study modes, 11Labs voice | Premium |
+
+---
+
+## Voice Quality Tiers
+
+We support three voice synthesis providers, tiered by quality and cost. Default selection is based on persona and tier:
+
+| Provider | Quality | Cost | Default For |
+|----------|---------|------|-------------|
+| **11Labs** | ⭐⭐⭐⭐⭐ Premium | $0.30/1000 chars | Pro/Studio tiers, Thought Leaders, Publishers |
+| **Voxtral (Mistral)** | ⭐⭐⭐⭐ High | $0.15/1000 chars | Growth tier, Developers, Indie Creators |
+| **MiniMax** | ⭐⭐⭐ Standard | $0.05/1000 chars | Free tier, Learners, budget-conscious |
+
+### Voice Selection Logic
+
+```
+IF user.tier == "free" AND persona == "learner":
+    DEFAULT voice = "minimax"  # Affordability first
+ELIF user.tier in ["pro", "studio"] AND persona in ["thought_leader", "publisher"]:
+    DEFAULT voice = "11labs"  # Premium quality for premium users
+ELIF user.tier == "growth" AND persona == "developer":
+    DEFAULT voice = "voxtral"  # Balance cost/quality for builders
+ELSE:
+    DEFAULT voice = "voxtral"  # Sensible default
+```
+
+### Human-Centered Design Philosophy
+
+**Core Objective:** Solve real human problems and create genuine value. Money is an outcome of value creation — not the driving force.
+
+> *"We are not building a monetization machine. We are building tools that help humans think, learn, create, and share more effectively. Revenue is applause — it tells us we're on the right track."*
+
+### Design Principles
+
+1. **Problem-first, not solution-first** — Every feature starts with: "What human problem does this solve?"
+2. **Affordability as a feature** — Free tier users get real value, not a crippled demo
+3. **Transparency** — Users know what they're paying for, what data we use, and why
+4. **Agency over automation** — Humans control the output, AI assists
+5. **Value before monetization** — Every tier must solve the persona's core problem
+
+### Per-Persona Voice + Value Emphasis
+
+| Persona | Core Problem Solved | Voice Default | Value Emphasis |
+|---------|---------------------|---------------|----------------|
+| Indie Creator | Can't write scripts efficiently | 11Labs (Pro), Voxtral (Free) | "Sound professional without writing skills" |
+| Developer | No API-first podcast generation | Voxtral (all tiers) | "Integrate into your workflow, pay for volume" |
+| Thought Leader | No time for content production | 11Labs (all tiers) | "Your voice, broadcast to the world" |
+| Publisher | Content doesn't scale | 11Labs (Studio), Voxtral (Starter) | "Scale content without scaling team" |
+| Learner | Passive learning doesn't stick | MiniMax (Personal), Voxtral (Scholar) | "Learn by creating, not just consuming" |
 
 ---
 
@@ -308,15 +357,18 @@ The same backend (podcast generation pipeline) can be wrapped as **5 different p
 ┌─────────────────────────────────────────┐
 │           Mind Stream Core               │
 ├─────────────────────────────────────────┤
-│  News/RSS Fetcher        ✓ Built        │
-│  Script Writer (LLM)     ✓ Built        │
-│  Audio Synth (11Labs)    ✓ Built        │
-│  Podcast Publisher       ✓ Built        │
-│  User Auth               ✓ Built        │
-│  API Key Management      ✓ Built        │
-│  Usage Tracking          ⚠️ Needs work  │
-│  Webhook System          ❌ Missing     │
-│  MCP Server              ❌ Missing     │
+│  News/RSS Fetcher           ✓ Built     │
+│  Script Writer (LLM)        ✓ Built     │
+│  Audio Synth (Multi-Provider) ✓ Built   │
+│    ├─ 11Labs               ✓           │
+│    ├─ Voxtral (Mistral)    ⚠️ Todo     │
+│    └─ MiniMax               ⚠️ Todo    │
+│  Podcast Publisher          ✓ Built     │
+│  User Auth                  ✓ Built     │
+│  API Key Management        ✓ Built      │
+│  Usage Tracking            ⚠️ Needs work│
+│  Webhook System            ❌ Missing   │
+│  MCP Server                ❌ Missing   │
 └─────────────────────────────────────────┘
 ```
 
@@ -363,7 +415,7 @@ Given Anand's goal of **billion-dollar value creation**, here's recommended buil
 
 ## Behavioral Science Applications
 
-### Per-Persona Nudges
+### Per-Persona Nudges (Human-Centered)
 
 | Persona | Key Behavior | Nudge Applied |
 |---------|--------------|---------------|
@@ -374,6 +426,8 @@ Given Anand's goal of **billion-dollar value creation**, here's recommended buil
 | Learner | Consistent review | "Time to review your BrainCast from Tuesday" |
 
 ### Hook Model per Product
+
+> **Note:** Nudges are applied ethically — we enhance human goals, not manipulate. Every engagement metric serves the user's stated objective, not vanity metrics.
 
 **ScriptFlow:** Trigger (idea strikes) → Action (write topic) → Reward (hear preview) → Investment (refine script)
 

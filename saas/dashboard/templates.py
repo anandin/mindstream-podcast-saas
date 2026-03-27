@@ -437,7 +437,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         };
         
         // API Base URL
-        const API_BASE = '/api';
+        const API_BASE = '/api/v1';
         
         // Auth
         let token = localStorage.getItem('access_token');
@@ -993,6 +993,10 @@ def get_dashboard_html():
     return DASHBOARD_HTML
 
 
-def get_login_html():
-    """Return the login HTML template."""
+def get_login_html(default_tab: str = "login"):
+    """Return the login HTML template with optional default tab."""
+    if default_tab == "register":
+        # Inject script to show register tab on load
+        inject = '<script>document.addEventListener("DOMContentLoaded", function() { showTab("register"); });</script>'
+        return LOGIN_HTML.replace("</body>", f"{inject}</body>")
     return LOGIN_HTML

@@ -85,7 +85,20 @@ async def dashboard():
 @app.get("/login", response_class=HTMLResponse)
 async def login_page():
     """Login/Register page."""
-    return get_login_html()
+    return get_login_html("login")
+
+
+@app.get("/register", response_class=HTMLResponse)
+async def register_page():
+    """Registration page (shows register tab)."""
+    return get_login_html("register")
+
+
+@app.get("/api/docs", response_class=HTMLResponse)
+async def api_docs():
+    """Redirect to Swagger docs."""
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/docs", status_code=301)
 
 
 # ── Error Handlers ───────────────────────────────────────────────────────
