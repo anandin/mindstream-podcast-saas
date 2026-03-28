@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoiceMemo - Your Voice. Your Ideas. A Global Audience.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FAFAFA;
+            --bg-secondary: #F0F0F0;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1A1A;
+            --text-secondary: #666666;
+            --text-muted: #999999;
+            --accent: #7C3AED;
+            --accent-hover: #6D28D9;
+            --accent-light: #F5F3FF;
+            --accent-dark: #5B21B6;
+            --border: #E5E5E5;
+            --gradient: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #EC4899 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(250, 250, 250, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: var(--gradient);
+            color: white;
+            box-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(124, 58, 237, 0.05) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 70%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-size: 72px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero h1 span {
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 48px;
+        }
+        
+        /* Record Button */
+        .record-section {
+            margin: 60px auto;
+            max-width: 500px;
+        }
+        
+        .record-btn {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: var(--gradient);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.3);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .record-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 30px 80px rgba(124, 58, 237, 0.4);
+        }
+        
+        .record-btn::before {
+            content: "";
+            position: absolute;
+            inset: -10px;
+            border-radius: 50%;
+            border: 2px dashed rgba(124, 58, 237, 0.3);
+            animation: spin 20s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .record-btn .icon {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+        
+        .record-btn .label {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .record-hint {
+            margin-top: 24px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: var(--bg-card);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+        }
+        
+        .feature-card {
+            text-align: center;
+            padding: 40px 32px;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent-light);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+        }
+        
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        /* Testimonial */
+        .testimonial {
+            padding: 100px 0;
+            background: linear-gradient(180deg, var(--bg-primary) 0%, var(--accent-light) 100%);
+        }
+        
+        .testimonial-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .testimonial-quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            line-height: 1.5;
+            margin-bottom: 32px;
+            color: var(--text-primary);
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+        
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+        
+        .testimonial-info h4 {
+            font-size: 16px;
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+        }
+        
+        .testimonial-info p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            padding: 48px 40px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.1);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(180deg, var(--accent-light) 0%, var(--bg-card) 100%);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--gradient);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .tagline {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        
+        .pricing-card .price {
+            font-family: 'Playfair Display', serif;
+            font-size: 64px;
+            font-weight: 700;
+            margin: 24px 0;
+        }
+        
+        .pricing-card .price span {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 32px 0;
+            text-align: left;
+        }
+        
+        .pricing-card li {
+            padding: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-card li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 700;
+        }
+        
+        /* CTA */
+        .cta-section {
+            padding: 100px 0;
+            background: var(--gradient);
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .cta-section p {
+            color: rgba(255,255,255,0.9);
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .cta-section .btn-secondary {
+            background: white;
+            color: var(--accent);
+        }
+        
+        .cta-section .btn-secondary:hover {
+            background: var(--accent-light);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            background: var(--text-primary);
+        }
+        
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        footer p {
+            color: rgba(255,255,255,0.6);
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: rgba(255,255,255,0.6);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 44px; }
+            .features-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">Voice<span>Memo</span></a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#">How It Works</a>
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Start Broadcasting Free</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Your voice. Your ideas. A <span>global audience.</span></h1>
+            <p>Record your thoughts, insights, and stories. We'll transform them into polished podcast episodes ready for the world.</p>
+            <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Start Broadcasting Free →</a>
+        </div>
+    </section>
+    
+    <section class="record-section">
+        <button class="record-btn">
+            <span class="icon">🎙️</span>
+            <span class="label">Tap to Record</span>
+        </button>
+        <p class="record-hint">or upload an existing audio file</p>
+    </section>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>From voice to podcast in minutes</h2>
+                <p>Professional quality without professional complexity</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎤</div>
+                    <h3>Voice-to-Podcast</h3>
+                    <p>Record directly in your browser or app. Our AI enhances your audio, removes filler words, and adds professional polish.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3>Auto-Enhancement</h3>
+                    <p>Background noise removal, volume normalization, and EQ adjustments — all handled automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Scheduled Publishing</h3>
+                    <p>Create your episode once, schedule it for Spotify, Apple Podcasts, and more. Set it and forget it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="testimonial">
+        <div class="container">
+            <div class="testimonial-content">
+                <p class="testimonial-quote">"I went from spending 4 hours editing each episode to just 20 minutes. VoiceMemo transformed how I produce content for my newsletter subscribers."</p>
+                <div class="testimonial-author">
+                    <div class="testimonial-avatar">MR</div>
+                    <div class="testimonial-info">
+                        <h4>Maria Rodriguez</h4>
+                        <p>Founder, Tech Insights Newsletter • 50K subscribers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Plans for every voice</h2>
+                <p>Start free, upgrade as your audience grows</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Solo</h3>
+                    <p class="tagline">Perfect for individual creators</p>
+                    <div class="price">$19<span>/month</span></div>
+                    <ul>
+                        <li>5 episodes per month</li>
+                        <li>30 min max per episode</li>
+                        <li>Standard voices</li>
+                        <li>Basic enhancement</li>
+                        <li>One podcast feed</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <span class="pricing-badge">Most Popular</span>
+                    <h3>Pro</h3>
+                    <p class="tagline">For serious content creators</p>
+                    <div class="price">$49<span>/month</span></div>
+                    <ul>
+                        <li>Unlimited episodes</li>
+                        <li>60 min max per episode</li>
+                        <li>Premium voices</li>
+                        <li>Advanced enhancement</li>
+                        <li>Multiple podcast feeds</li>
+                        <li>Analytics dashboard</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary" style="width:100%">Start Free Trial</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Brand</h3>
+                    <p class="tagline">For brands and media companies</p>
+                    <div class="price">$149<span>/month</span></div>
+                    <ul>
+                        <li>Everything in Pro</li>
+                        <li>Custom voice cloning</li>
+                        <li>White-label hosting</li>
+                        <li>Team collaboration</li>
+                        <li>API access</li>
+                        <li>Dedicated support</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to reach a global audience?</h2>
+            <p>Join thousands of thought leaders already broadcasting</p>
+            <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary">Start Broadcasting Free →</a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 VoiceMemo. Part of the Mind Stream platform.</p>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

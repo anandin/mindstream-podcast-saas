@@ -28,6 +28,8 @@ from saas.db.models import (
 )
 from saas.auth.auth import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
 from saas.dashboard.templates import get_dashboard_html, get_login_html
+from saas.dashboard.landing import get_landing_html
+from saas.dashboard.castapi import get_castapi_html
 
 # Initialize database
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./saas_podcast.db")
@@ -64,16 +66,8 @@ static_dir.mkdir(exist_ok=True)
 
 @app.get("/", response_class=HTMLResponse)
 async def root():
-    """Redirect to dashboard or login."""
-    return """
-    <!DOCTYPE html>
-    <html>
-    <head><title>Mind Stream SaaS</title></head>
-    <body>
-        <script>window.location.href = '/dashboard';</script>
-    </body>
-    </html>
-    """
+    """Mind Stream landing page."""
+    return get_landing_html()
 
 
 @app.get("/dashboard", response_class=HTMLResponse)
@@ -92,6 +86,12 @@ async def login_page():
 async def register_page():
     """Registration page (shows register tab)."""
     return get_login_html("register")
+
+
+@app.get("/castapi", response_class=HTMLResponse)
+async def castapi_page():
+    """CastAPI developer portal."""
+    return get_castapi_html()
 
 
 @app.get("/api/docs", response_class=HTMLResponse)

@@ -171,7 +171,7 @@ def save(updates: dict) -> dict:
             val = max(lo, min(hi, int(val)))
         if key in ("script_model", "fallback_model") and val not in VALID_MODEL_IDS:
             continue
-        if key == "tts_provider" and val not in ("elevenlabs", "openai"):
+        if key == "tts_provider" and val not in ("elevenlabs", "openai", "voxtral", "minimax", "11labs"):
             continue
         current[key] = val
     if current.get("fallback_model") == current.get("script_model"):

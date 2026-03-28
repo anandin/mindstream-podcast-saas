@@ -22,6 +22,13 @@ TRANSISTOR_BASE_URL = "https://api.transistor.fm/v1"
 # === OpenAI (TTS provider) ===
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
+# === Voxtral/Mistral (TTS provider - high quality, mid cost) ===
+VOXTRAL_API_KEY = os.getenv("VOXTRAL_API_KEY", "")
+
+# === MiniMax (TTS provider - budget, standard quality) ===
+MINIMAX_API_KEY = os.getenv("MINIMAX_API_KEY", "")
+MINIMAX_GROUP_ID = os.getenv("MINIMAX_GROUP_ID", "")
+
 # === OpenRouter (fallback LLM provider) ===
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 

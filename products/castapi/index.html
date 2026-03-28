@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CastAPI - Podcast Generation API for Developers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0D0D0F;
+            --bg-secondary: #161619;
+            --bg-card: #1A1A1E;
+            --bg-code: #0A0A0C;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A0A0A8;
+            --text-muted: #606068;
+            --accent: #00D4AA;
+            --accent-hover: #00B894;
+            --accent-light: rgba(0, 212, 170, 0.1);
+            --accent-glow: rgba(0, 212, 170, 0.3);
+            --border: #2A2A30;
+            --green: #00D4AA;
+            --blue: #4D7CFF;
+            --purple: #A855F7;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13, 13, 15, 0.9);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: var(--bg-primary);
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 160px 0 80px;
+        }
+        
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--accent-light);
+            border: 1px solid var(--accent);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .hero h1 {
+            font-size: 56px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 700px;
+        }
+        
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 550px;
+            margin-bottom: 40px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+        }
+        
+        /* Code Block */
+        .code-block {
+            background: var(--bg-code);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin: 60px 0;
+        }
+        
+        .code-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .code-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .code-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .code-dots span:nth-child(1) { background: #FF5F56; }
+        .code-dots span:nth-child(2) { background: #FFBD2E; }
+        .code-dots span:nth-child(3) { background: #27CA40; }
+        
+        .code-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .code-copy {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .code-copy:hover {
+            background: var(--bg-card);
+            color: var(--text-secondary);
+        }
+        
+        .code-content {
+            padding: 24px;
+            overflow-x: auto;
+        }
+        
+        .code-content pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+        
+        .code-content .keyword { color: var(--purple); }
+        .code-content .string { color: var(--accent); }
+        .code-content .comment { color: var(--text-muted); }
+        .code-content .property { color: var(--blue); }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 17px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            padding: 28px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--accent-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            font-size: 22px;
+        }
+        
+        .feature-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 32px;
+            position: relative;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(180deg, var(--accent-light) 0%, var(--bg-card) 50%);
+        }
+        
+        .pricing-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent);
+            color: var(--bg-primary);
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .pricing-card h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 16px 0;
+        }
+        
+        .pricing-card .price span {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 24px 0;
+        }
+        
+        .pricing-card li {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-card li::before {
+            content: "→";
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        /* API Endpoints */
+        .endpoints {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .endpoints-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+        
+        .endpoint-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+        
+        .endpoint-method {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 12px;
+        }
+        
+        .method-get { background: rgba(0, 212, 170, 0.2); color: var(--green); }
+        .method-post { background: rgba(77, 124, 255, 0.2); color: var(--blue); }
+        
+        .endpoint-path {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+        
+        .endpoint-desc {
+            margin-top: 12px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* CTA */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .cta-box {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 60px;
+        }
+        
+        .cta-box h2 {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        
+        .cta-box p {
+            color: var(--text-secondary);
+            font-size: 17px;
+            margin-bottom: 32px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        footer p {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .features-grid, .pricing-grid, .endpoints-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">⚡</div>
+                Cast<span>API</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#docs">Docs</a>
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Get API Key →</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <div class="hero-label">🟢 Developer API</div>
+            <h1>Podcast generation API for <span>AI agents</span> and developers</h1>
+            <p>Integrate podcast generation into your apps, workflows, and AI agents with a single REST call. Support for 40+ voices, multiple formats, and real-time streaming.</p>
+            <div class="hero-cta">
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Get Your API Key →</a>
+                <a href="#docs" class="btn btn-secondary">Read Documentation</a>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="code-block">
+            <div class="code-header">
+                <div class="code-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="code-title">terminal</div>
+                <button class="code-copy">Copy</button>
+            </div>
+            <div class="code-content">
+<pre><span class="comment"># Generate a podcast episode with a single curl request</span>
+curl -X POST https://mind-the-gap-saas.fly.dev/api/v1/episodes \
+  <span class="property">-H</span> <span class="string">"Authorization: Bearer YOUR_API_KEY"</span> \
+  <span class="property">-H</span> <span class="string">"Content-Type: application/json"</span> \
+  <span class="property">-d</span> <span class="string">'{
+    "title": "The Future of AI in Content Creation",
+    "script": "Today we explore how artificial intelligence...",
+    "voice": "allison",
+    "format": "podcast",
+    "enhance": true
+  }'</span>
+
+<span class="comment"># Response</span>
+{
+  <span class="property">"id"</span>: <span class="string">"ep_abc123"</span>,
+  <span class="property">"status"</span>: <span class="string">"processing"</span>,
+  <span class="property">"audio_url"</span>: <span class="string">null</span>,
+  <span class="property">"duration"</span>: <span class="string">null</span>
+}</pre>
+            </div>
+        </div>
+    </div>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Built for developers</h2>
+                <p>Everything you need to integrate podcast generation at scale</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🔌</div>
+                    <h3>REST API</h3>
+                    <p>Clean, well-documented REST endpoints. JSON responses, standard HTTP codes, webhooks for async processing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎙</div>
+                    <h3>40+ Voices</h3>
+                    <p>Access to premium neural voices across 30+ languages. Clone your own voice with enterprise plans.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Real-time Streaming</h3>
+                    <p>Stream audio as it's being generated. Perfect for live applications and responsive AI agents.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Webhook Support</h3>
+                    <p>Get notified when episodes are ready. Build event-driven workflows with our webhook system.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Usage Analytics</h3>
+                    <p>Track API usage, monitor costs, and analyze quality metrics from your dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Enterprise Ready</h3>
+                    <p>SOC 2 compliant, 99.9% SLA, dedicated support, and custom rate limits for your scale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="endpoints" id="docs">
+        <div class="container">
+            <div class="section-header">
+                <h2>API Endpoints</h2>
+                <p>Simple, predictable URLs for everything you need</p>
+            </div>
+            <div class="endpoints-grid">
+                <div class="endpoint-card">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/v1/episodes</span>
+                    <p class="endpoint-desc">Create a new podcast episode. Returns episode ID and initial status.</p>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/episodes/{id}</span>
+                    <p class="endpoint-desc">Retrieve episode details including status, audio URL, and metadata.</p>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method method-get">GET</span>
+                    <span class="endpoint-path">/api/v1/voices</span>
+                    <p class="endpoint-desc">List all available voices with samples and language support.</p>
+                </div>
+                <div class="endpoint-card">
+                    <span class="endpoint-method method-post">POST</span>
+                    <span class="endpoint-path">/api/v1/webhooks</span>
+                    <p class="endpoint-desc">Register webhook endpoints for episode completion and status updates.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple, usage-based pricing</h2>
+                <p>Pay only for what you use, with generous free tiers</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Dev</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul>
+                        <li>1,000 API calls/month</li>
+                        <li>10 voices</li>
+                        <li>Community support</li>
+                        <li>7 day history</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Get Free Key</a>
+                </div>
+                <div class="pricing-card featured">
+                    <span class="pricing-badge">Most Popular</span>
+                    <h3>Growth</h3>
+                    <div class="price">$49<span>/month</span></div>
+                    <ul>
+                        <li>50,000 API calls/month</li>
+                        <li>All 40+ voices</li>
+                        <li>Priority support</li>
+                        <li>Webhooks included</li>
+                        <li>90 day history</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary" style="width:100%">Start Free Trial</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Scale</h3>
+                    <div class="price">$199<span>/month</span></div>
+                    <ul>
+                        <li>Unlimited API calls</li>
+                        <li>Custom voice cloning</li>
+                        <li>Dedicated support</li>
+                        <li>99.9% SLA</li>
+                        <li>Custom rate limits</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Start building in minutes</h2>
+                <p>Get your API key and generate your first podcast episode today</p>
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Get Your API Key →</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 CastAPI. Powered by Mind Stream.</p>
+            <div class="footer-links">
+                <a href="#">Documentation</a>
+                <a href="#">Status</a>
+                <a href="#">Support</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

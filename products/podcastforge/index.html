@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodcastForge - Scale Your Podcast Empire</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-card: #1E293B;
+            --bg-card-hover: #273549;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+            --accent: #F97316;
+            --accent-hover: #EA580C;
+            --accent-light: rgba(249, 115, 22, 0.15);
+            --border: #334155;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-card);
+            border-color: var(--text-muted);
+        }
+        
+        /* Hero */
+        .hero {
+            padding: 160px 0 80px;
+        }
+        
+        .hero-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            background: var(--accent-light);
+            border: 1px solid var(--accent);
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .hero h1 {
+            font-size: 56px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 800px;
+        }
+        
+        .hero h1 span {
+            color: var(--accent);
+        }
+        
+        .hero p {
+            font-size: 18px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+        }
+        
+        /* Dashboard Preview */
+        .dashboard-preview {
+            margin: 60px 0;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+        }
+        
+        .dashboard-dots {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .dashboard-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .dashboard-dots span:nth-child(1) { background: #FF5F56; }
+        .dashboard-dots span:nth-child(2) { background: #FFBD2E; }
+        .dashboard-dots span:nth-child(3) { background: #27CA40; }
+        
+        .dashboard-title {
+            flex: 1;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        .dashboard-body {
+            padding: 24px;
+        }
+        
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            background: var(--bg-primary);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        
+        .stat-card .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        
+        .stat-card .value.accent { color: var(--accent); }
+        
+        .podcast-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+        
+        .podcast-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+        }
+        
+        .podcast-tab.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .episode-list {
+            background: var(--bg-primary);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        
+        .episode-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            gap: 16px;
+        }
+        
+        .episode-item:last-child {
+            border-bottom: none;
+        }
+        
+        .episode-thumbnail {
+            width: 48px;
+            height: 48px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .episode-info {
+            flex: 1;
+        }
+        
+        .episode-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        
+        .episode-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        
+        .episode-status {
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-published { background: rgba(34, 197, 94, 0.2); color: #22C55E; }
+        .status-processing { background: rgba(249, 115, 22, 0.2); color: var(--accent); }
+        .status-draft { background: rgba(100, 116, 139, 0.2); color: var(--text-muted); }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: 44px;
+            margin-bottom: 16px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 17px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s;
+        }
+        
+        .feature-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+        
+        .feature-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--accent-light);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        /* Workflow */
+        .workflow {
+            padding: 100px 0;
+        }
+        
+        .workflow-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            margin-top: 60px;
+        }
+        
+        .workflow-step {
+            text-align: center;
+            position: relative;
+        }
+        
+        .workflow-step::after {
+            content: "→";
+            position: absolute;
+            right: -20px;
+            top: 30px;
+            font-size: 24px;
+            color: var(--text-muted);
+        }
+        
+        .workflow-step:last-child::after {
+            display: none;
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 700;
+            margin: 0 auto 16px;
+        }
+        
+        .workflow-step h4 {
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+        
+        .workflow-step p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--accent);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(180deg, var(--accent-light) 0%, var(--bg-card) 100%);
+        }
+        
+        .pricing-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card h3 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-size: 56px;
+            font-weight: 800;
+            margin: 20px 0;
+        }
+        
+        .pricing-card .price span {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 24px 0;
+            text-align: left;
+        }
+        
+        .pricing-card li {
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-card li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 700;
+        }
+        
+        /* CTA */
+        .cta-section {
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .cta-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 60px;
+        }
+        
+        .cta-box h2 {
+            font-size: 40px;
+            margin-bottom: 16px;
+        }
+        
+        .cta-box p {
+            color: var(--text-secondary);
+            font-size: 17px;
+            margin-bottom: 32px;
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        footer p {
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 36px; }
+            .features-grid, .pricing-grid, .workflow-steps { grid-template-columns: 1fr; }
+            .dashboard-stats { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">
+                <div class="logo-icon">🔥</div>
+                PodcastForge
+            </a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#">Case Studies</a>
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Book a Demo</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <div class="hero-label">🔥 For Publishers & Agencies</div>
+            <h1>Scale your podcast empire <span>without scaling your team</span></h1>
+            <p>Manage multiple shows, collaborate with your team, and produce more content — without the chaos. Built for publishers who take podcasting seriously.</p>
+            <div class="hero-cta">
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Book a Demo →</a>
+                <a href="#features" class="btn btn-secondary">See How It Works</a>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="dashboard-preview">
+            <div class="dashboard-header">
+                <div class="dashboard-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="dashboard-title">PodcastForge Dashboard</div>
+            </div>
+            <div class="dashboard-body">
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="label">Total Shows</div>
+                        <div class="value accent">12</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Episodes This Month</div>
+                        <div class="value">47</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Total Downloads</div>
+                        <div class="value">284K</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="label">Team Members</div>
+                        <div class="value">8</div>
+                    </div>
+                </div>
+                
+                <div class="podcast-tabs">
+                    <button class="podcast-tab active">All Shows</button>
+                    <button class="podcast-tab">Tech Weekly</button>
+                    <button class="podcast-tab">Business Insights</button>
+                    <button class="podcast-tab">Creative Minds</button>
+                </div>
+                
+                <div class="episode-list">
+                    <div class="episode-item">
+                        <div class="episode-thumbnail">🎙️</div>
+                        <div class="episode-info">
+                            <h4>The Future of Remote Work in Tech</h4>
+                            <p>Tech Weekly • Episode 142 • 42 min</p>
+                        </div>
+                        <span class="episode-status status-published">Published</span>
+                    </div>
+                    <div class="episode-item">
+                        <div class="episode-thumbnail">🎙️</div>
+                        <div class="episode-info">
+                            <h4>Building Sustainable Business Models</h4>
+                            <p>Business Insights • Episode 89 • 38 min</p>
+                        </div>
+                        <span class="episode-status status-processing">Processing</span>
+                    </div>
+                    <div class="episode-item">
+                        <div class="episode-thumbnail">🎙️</div>
+                        <div class="episode-info">
+                            <h4>Interview with Design Leaders</h4>
+                            <p>Creative Minds • Episode 34 • Draft</p>
+                        </div>
+                        <span class="episode-status status-draft">Draft</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Built for content operations</h2>
+                <p>Everything you need to run a podcasting empire at scale</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Team Roles</h3>
+                    <p>Assign producers, editors, and reviewers with granular permissions. Everyone knows what to do.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Workflow Stages</h3>
+                    <p>Custom pipelines from draft to publish. Move episodes through review, edit, and approval with ease.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Bulk Generation</h3>
+                    <p>Queue multiple episodes for generation. AI handles the heavy lifting while your team focuses on strategy.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Unified Analytics</h3>
+                    <p>Cross-show performance metrics in one dashboard. See what's working across your entire podcast network.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3>Auto-Publishing</h3>
+                    <p>Connect your podcast feeds and publish directly to Spotify, Apple, and more — on schedule.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Quality Controls</h3>
+                    <p>Set brand voice guidelines, review automated outputs, and maintain consistency across all shows.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="workflow">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple workflow, powerful results</h2>
+                <p>From idea to published episode in four steps</p>
+            </div>
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-number">1</div>
+                    <h4>Create</h4>
+                    <p>Add episode details or import from your content calendar</p>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <h4>Generate</h4>
+                    <p>AI creates your podcast episode with selected voice</p>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <h4>Review</h4>
+                    <p>Team reviews and approves or requests changes</p>
+                </div>
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <h4>Publish</h4>
+                    <p>Schedule and distribute to all major platforms</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Plans for every operation</h2>
+                <p>Scale your podcast production without scaling your headcount</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">$99<span>/month</span></div>
+                    <ul>
+                        <li>3 podcast shows</li>
+                        <li>30 episodes/month</li>
+                        <li>3 team members</li>
+                        <li>Basic workflows</li>
+                        <li>Standard support</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Start Free Trial</a>
+                </div>
+                <div class="pricing-card featured">
+                    <span class="pricing-badge">Most Popular</span>
+                    <h3>Growth</h3>
+                    <div class="price">$299<span>/month</span></div>
+                    <ul>
+                        <li>10 podcast shows</li>
+                        <li>100 episodes/month</li>
+                        <li>10 team members</li>
+                        <li>Advanced workflows</li>
+                        <li>Priority support</li>
+                        <li>Analytics dashboard</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary" style="width:100%">Start Free Trial</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Agency</h3>
+                    <div class="price">$799<span>/month</span></div>
+                    <ul>
+                        <li>Unlimited shows</li>
+                        <li>Unlimited episodes</li>
+                        <li>Unlimited team</li>
+                        <li>Custom workflows</li>
+                        <li>Dedicated success manager</li>
+                        <li>API access</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <h2>Ready to scale your podcast empire?</h2>
+                <p>Book a personalized demo and see how PodcastForge can transform your content operations</p>
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Book a Demo →</a>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 PodcastForge. Part of the Mind Stream platform.</p>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -50,6 +50,9 @@ class User(Base):
     # Podcasts owned by this user
     podcasts = relationship("Podcast", back_populates="owner", cascade="all, delete-orphan")
     
+    # Scripts owned by this user
+    scripts = relationship("Script", back_populates="owner", cascade="all, delete-orphan")
+    
     # Timestamps
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
@@ -125,6 +128,29 @@ class Podcast(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
     updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     is_active = Column(Boolean, default=True)
+
+
+class Script(Base):
+    """Script model for ScriptFlow - stores script content before episode generation."""
+    __tablename__ = "scripts"
+    
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    
+    # Script data
+    title = Column(String(500), nullable=False)
+    content = Column(Text)  # HTML content from WYSIWYG
+    plain_text = Column(Text)  # Plain text for TTS
+    template_type = Column(String(50))  # interview, solo, news, tutorial
+    
+    # Versioning
+    version = Column(Integer, default=1)
+    
+    # Relationships
+    owner = relationship("User", back_populates="scripts")
+    
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
 
 
 class Episode(Base):

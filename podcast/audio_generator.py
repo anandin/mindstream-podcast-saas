@@ -1,10 +1,10 @@
 """
-Generates podcast audio using ElevenLabs text_to_dialogue (GenFM) or
-OpenAI TTS, with simple sequential mixing pipeline.
+Generates podcast audio using ElevenLabs text_to_dialogue (GenFM),
+OpenAI TTS, Voxtral (Mistral), or MiniMax, with simple sequential mixing pipeline.
 
 Audio pipeline
 ──────────────
-1. Generate ALL host dialogue via GenFM or OpenAI TTS (batched, 2 speakers)
+1. Generate ALL host dialogue via GenFM or alternative TTS provider (batched, 2 speakers)
 2. Generate ambient SFX clips via ElevenLabs Sound Effects API
 3. Load intro & outro jingles
 4. Mix: intro jingle (fade out) → dialogue with SFX beds → outro jingle (fade in)
@@ -24,6 +24,22 @@ from pydub import AudioSegment
 
 import config
 import settings as podcast_settings
+
+# Import voice providers
+try:
+    from voice_providers import (
+        VoiceProvider, 
+        get_provider, 
+        get_voice_id,
+        ElevenLabsProvider,
+        VoxtralProvider,
+        MiniMaxProvider,
+        OpenAIProvider,
+    )
+    VOICE_PROVIDERS_AVAILABLE = True
+except ImportError:
+    VOICE_PROVIDERS_AVAILABLE = False
+    log.warning("voice_providers module not available - using legacy TTS only")
 
 log = logging.getLogger(__name__)
 
@@ -246,6 +262,85 @@ def _generate_dialogue_openai(
     return combined
 
 
+def _generate_dialogue_multi_provider(
+    turns: list[dict[str, str]],
+    provider_name: str,
+) -> AudioSegment:
+    """
+    Generate dialogue using any TTS provider (Voxtral, MiniMax, etc.)
+    by generating each speaker's audio separately and combining.
+    
+    This is used for providers that don't have a multi-voice dialogue API
+    like ElevenLabs' GenFM.
+    """
+    if not VOICE_PROVIDERS_AVAILABLE:
+        raise RuntimeError(
+            f"Voice providers module not available. "
+            f"Please configure {provider_name.upper()}_API_KEY or use ElevenLabs."
+        )
+    
+    dialogue_turns = [t for t in turns if t["speaker"].upper() in DIALOGUE_SPEAKERS]
+    if not dialogue_turns:
+        return AudioSegment.silent(duration=100)
+    
+    total_words = sum(len(t["text"].split()) for t in dialogue_turns)
+    log.info(
+        "Generating dialogue via %s — %d turns, ~%d words.",
+        provider_name, len(dialogue_turns), total_words,
+    )
+    
+    # Get the provider
+    try:
+        provider = get_provider(provider_name)
+    except RuntimeError as exc:
+        raise RuntimeError(f"{exc}. Please configure the API key or switch providers.")
+    
+    # Get voice IDs
+    provider_enum = VoiceProvider(provider_name.lower().replace("11labs", "elevenlabs"))
+    voice_map = {
+        "ALEX": _get_voice_map().get("ALEX") or get_voice_id(provider_enum, "ALEX"),
+        "MAYA": _get_voice_map().get("MAYA") or get_voice_id(provider_enum, "MAYA"),
+    }
+    
+    # Generate each turn's audio
+    chunks: list[AudioSegment] = []
+    pause_between = AudioSegment.silent(duration=350)
+    
+    for i, turn in enumerate(dialogue_turns):
+        speaker = turn["speaker"].upper()
+        text = turn["text"].strip()
+        if not text:
+            continue
+        
+        voice_id = voice_map.get(speaker, voice_map["ALEX"])
+        
+        log.info(
+            "  %s turn %d/%d (%s, %d chars)…",
+            provider_name, i + 1, len(dialogue_turns), speaker, len(text),
+        )
+        
+        try:
+            segment = provider.generate_speech(text, voice_id, speaker)
+            if chunks:
+                chunks.append(pause_between)
+            chunks.append(segment)
+        except Exception as exc:
+            log.warning(
+                "  %s failed for turn %d (%s): %s — using silence",
+                provider_name, i + 1, speaker, exc
+            )
+            chunks.append(AudioSegment.silent(duration=1000))
+    
+    if not chunks:
+        return AudioSegment.silent(duration=100)
+    
+    combined = chunks[0]
+    for seg in chunks[1:]:
+        combined += seg
+    
+    return combined
+
+
 def _generate_sfx_clips(
     script: list[dict[str, str]],
 ) -> list[tuple[int, AudioSegment]]:
@@ -362,7 +457,31 @@ def generate_audio(
 
     if tts_provider == "openai":
         dialogue_audio = _generate_dialogue_openai(script)
+    elif tts_provider in ("voxtral", "minimax"):
+        # Use multi-provider TTS for Voxtral and MiniMax
+        dialogue_audio = _generate_dialogue_multi_provider(script, tts_provider)
+    elif VOICE_PROVIDERS_AVAILABLE and tts_provider == "11labs":
+        # Use ElevenLabs with voice providers module
+        try:
+            provider = ElevenLabsProvider()
+            voice_map = _get_voice_map()
+            log.info("Voice mapping: ALEX=%s, MAYA=%s", voice_map["ALEX"], voice_map["MAYA"])
+            # ElevenLabs needs special handling with DialogueInput
+            dialogue_audio = _generate_dialogue_audio(
+                provider.client, script, voice_map
+            )
+        except Exception:
+            # Fallback to legacy ElevenLabs if voice_providers fails
+            if not config.ELEVENLABS_API_KEY:
+                raise RuntimeError(
+                    "ELEVENLABS_API_KEY is not set. Please add it in the Secrets tab."
+                )
+            client = ElevenLabs(api_key=config.ELEVENLABS_API_KEY)
+            voice_map = _get_voice_map()
+            log.info("Voice mapping: ALEX=%s, MAYA=%s", voice_map["ALEX"], voice_map["MAYA"])
+            dialogue_audio = _generate_dialogue_audio(client, script, voice_map)
     else:
+        # Default: ElevenLabs GenFM (original behavior)
         if not config.ELEVENLABS_API_KEY:
             raise RuntimeError(
                 "ELEVENLABS_API_KEY is not set. Please add it in the Secrets tab."

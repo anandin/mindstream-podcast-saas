@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScriptFlow - Turn Ideas Into Podcast-Ready Scripts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #FDFBF7;
+            --bg-secondary: #F5F0E8;
+            --bg-card: #FFFFFF;
+            --text-primary: #2D2A26;
+            --text-secondary: #6B6560;
+            --accent: #D4542C;
+            --accent-hover: #B8432A;
+            --accent-light: #FEF3ED;
+            --border: #E8E2D9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Crimson Pro', serif;
+            font-weight: 600;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        /* Navigation */
+        nav {
+            padding: 20px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(253, 251, 247, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        nav .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-family: 'Crimson Pro', serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .logo span {
+            color: var(--accent);
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+        
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+        
+        .nav-links a:hover {
+            color: var(--text-primary);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+        
+        /* Hero Section */
+        .hero {
+            padding: 160px 0 100px;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: var(--accent-light);
+            color: var(--accent);
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+        
+        .hero h1 {
+            font-size: 64px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero h1 span {
+            color: var(--accent);
+        }
+        
+        .hero p {
+            font-size: 20px;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+        
+        /* Editor Preview */
+        .editor-preview {
+            margin: 80px auto;
+            max-width: 1000px;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(45, 42, 38, 0.08);
+        }
+        
+        .editor-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .editor-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .editor-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .editor-dots span:nth-child(1) { background: #FF5F56; }
+        .editor-dots span:nth-child(2) { background: #FFBD2E; }
+        .editor-dots span:nth-child(3) { background: #27CA40; }
+        
+        .editor-title {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        
+        .editor-body {
+            padding: 32px;
+            min-height: 400px;
+            background: var(--bg-card);
+        }
+        
+        .editor-toolbar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .toolbar-btn {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        .toolbar-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .script-content {
+            font-family: 'Crimson Pro', serif;
+            font-size: 18px;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .script-content p {
+            margin-bottom: 16px;
+        }
+        
+        .script-content .voice-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-light);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        
+        /* Features */
+        .features {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-header h2 {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        .section-header p {
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+        
+        .feature-card {
+            background: var(--bg-card);
+            padding: 32px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+        }
+        
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: var(--accent-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+        
+        /* Pricing */
+        .pricing {
+            padding: 100px 0;
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .pricing-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 32px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+        }
+        
+        .pricing-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(to bottom, var(--accent-light), var(--bg-card));
+        }
+        
+        .pricing-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+        
+        .pricing-card h3 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        
+        .pricing-card .price {
+            font-size: 56px;
+            font-weight: 700;
+            margin: 16px 0;
+            font-family: 'Crimson Pro', serif;
+        }
+        
+        .pricing-card .price span {
+            font-size: 18px;
+            font-weight: 400;
+            color: var(--text-secondary);
+        }
+        
+        .pricing-card ul {
+            list-style: none;
+            margin: 24px 0;
+            text-align: left;
+        }
+        
+        .pricing-card li {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+        }
+        
+        .pricing-card li::before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 600;
+        }
+        
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--text-primary) 0%, #4A453D 100%);
+            text-align: center;
+        }
+        
+        .cta-section h2 {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 16px;
+        }
+        
+        .cta-section p {
+            color: rgba(255,255,255,0.7);
+            font-size: 18px;
+            margin-bottom: 32px;
+        }
+        
+        .cta-section .btn-primary {
+            background: white;
+            color: var(--text-primary);
+        }
+        
+        .cta-section .btn-primary:hover {
+            background: var(--bg-secondary);
+        }
+        
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            border-top: 1px solid var(--border);
+        }
+        
+        footer .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        footer p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 24px;
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 40px; }
+            .features-grid, .pricing-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <a href="#" class="logo">Script<span>Flow</span></a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#">Templates</a>
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Start Writing Free</a>
+            </div>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <div class="container">
+            <div class="hero-badge">✨ For Writers & Creators</div>
+            <h1>Turn your ideas into <span>podcast-ready scripts</span> — in minutes</h1>
+            <p>The WYSIWYG editor that helps writers craft compelling podcast content with templates, voice preview, and seamless publishing.</p>
+            <div class="hero-cta">
+                <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Start Writing for Free →</a>
+                <a href="#features" class="btn btn-secondary">See How It Works</a>
+            </div>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="editor-preview">
+            <div class="editor-header">
+                <div class="editor-dots">
+                    <span></span><span></span><span></span>
+                </div>
+                <div class="editor-title">My First Podcast Script — ScriptFlow</div>
+            </div>
+            <div class="editor-body">
+                <div class="editor-toolbar">
+                    <button class="toolbar-btn">Intro</button>
+                    <button class="toolbar-btn active">Script</button>
+                    <button class="toolbar-btn">Outline</button>
+                    <button class="toolbar-btn">Voice</button>
+                </div>
+                <div class="script-content">
+                    <p>[INTRO — WARM, FRIENDLY TONE]</p>
+                    <p>Hey everyone, welcome back to the show. Today I want to talk about something that's been on my mind lately...</p>
+                    <p>But first, let me ask you a question: <span class="voice-note">🎙 Add voice note</span></p>
+                    <p>[TRANSITION]</p>
+                    <p>Okay, so here's the thing nobody talks about...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything a writer needs</h2>
+                <p>Powerful tools designed for the creative process</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📝</div>
+                    <h3>WYSIWYG Editor</h3>
+                    <p>See exactly what your podcast will sound like. Format, edit, and refine with a familiar rich-text interface.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Script Templates</h3>
+                    <p>Start fast with proven structures. Interview formats, solo shows, storytelling frameworks, and more.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎙</div>
+                    <h3>Voice Preview</h3>
+                    <p>Hear how your script sounds before you record. Test different voices and pacing instantly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <h2>Simple, transparent pricing</h2>
+                <p>Start free, upgrade when you need more</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Free</h3>
+                    <div class="price">$0<span>/month</span></div>
+                    <ul>
+                        <li>5 scripts per month</li>
+                        <li>Basic templates</li>
+                        <li>Standard voices</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Get Started</a>
+                </div>
+                <div class="pricing-card featured">
+                    <span class="pricing-badge">Most Popular</span>
+                    <h3>Pro</h3>
+                    <div class="price">$29<span>/month</span></div>
+                    <ul>
+                        <li>Unlimited scripts</li>
+                        <li>Premium templates</li>
+                        <li>All voices + custom</li>
+                        <li>Voice preview</li>
+                        <li>Priority support</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary" style="width:100%">Start Free Trial</a>
+                </div>
+                <div class="pricing-card">
+                    <h3>Studio</h3>
+                    <div class="price">$79<span>/month</span></div>
+                    <ul>
+                        <li>Everything in Pro</li>
+                        <li>Team collaboration</li>
+                        <li>Custom voice cloning</li>
+                        <li>API access</li>
+                        <li>Dedicated support</li>
+                    </ul>
+                    <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to write your first script?</h2>
+            <p>Join thousands of creators already using ScriptFlow</p>
+            <a href="https://mind-the-gap-saas.fly.dev/dashboard" class="btn btn-primary">Start Writing for Free →</a>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>© 2026 ScriptFlow. Part of the Mind Stream platform.</p>
+            <div class="footer-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

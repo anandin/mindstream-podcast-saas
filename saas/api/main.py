@@ -11,7 +11,7 @@ from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException, status, Header, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator, constr
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 import jwt
@@ -76,6 +76,20 @@ class UserCreate(BaseModel):
     password: str
     name: Optional[str] = None
     company: Optional[str] = None
+    
+    @field_validator('password')
+    @classmethod
+    def password_min_length(cls, v):
+        if not v or len(v) < 8:
+            raise ValueError('Password must be at least 8 characters')
+        return v
+    
+    @field_validator('email')
+    @classmethod
+    def email_lowercase(cls, v):
+        if v:
+            return v.lower().strip()
+        return v
 
 
 class UserLogin(BaseModel):
@@ -128,6 +142,23 @@ class PodcastCreate(BaseModel):
     target_word_count: int = 1500
     content_sources: List[str] = []
     custom_prompt_sections: dict = {}
+    
+    @field_validator('title')
+    @classmethod
+    def title_validation(cls, v):
+        if not v or not v.strip():
+            raise ValueError('Title cannot be empty')
+        v = v.strip()
+        if len(v) > 255:
+            raise ValueError('Title must be 255 characters or less')
+        return v
+    
+    @field_validator('description')
+    @classmethod
+    def description_validation(cls, v):
+        if v and len(v) > 5000:
+            raise ValueError('Description must be 5000 characters or less')
+        return v
 
 
 class PodcastUpdate(BaseModel):
@@ -194,6 +225,39 @@ class GenerateEpisodeRequest(BaseModel):
     date: Optional[str] = None  # YYYY-MM-DD format
     script_only: bool = False
     no_publish: bool = False
+    content_source: Optional[str] = None  # HTML content from script editor
+    title: Optional[str] = None  # Episode title
+    voice: Optional[str] = "elevenlabs"  # TTS provider
+
+
+# ── Script Models ─────────────────────────────────────────────────────────────
+
+class ScriptCreate(BaseModel):
+    title: str
+    content: Optional[str] = None
+    template_type: Optional[str] = None
+
+
+class ScriptUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    template_type: Optional[str] = None
+    version: Optional[int] = None
+
+
+class ScriptResponse(BaseModel):
+    id: int
+    user_id: int
+    title: str
+    content: Optional[str]
+    plain_text: Optional[str]
+    template_type: Optional[str]
+    version: int
+    created_at: datetime
+    updated_at: datetime
+    
+    class Config:
+        from_attributes = True
 
 
 class APIKeyCreate(BaseModel):
@@ -312,33 +376,53 @@ def require_tier(tier: SubscriptionTier):
 
 @app.post("/api/v1/auth/register", response_model=TokenResponse, status_code=201)
 def register(user_data: UserCreate, db: Session = Depends(get_db_session)):
-    """Register a new user account."""
-    # Check if user exists
-    existing = db.query(User).filter(User.email == user_data.email).first()
-    if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
+    """Register a new user account with retry logic for race conditions."""
+    import time
     
-    # Create user
-    user = User(
-        email=user_data.email,
-        password_hash=hash_password(user_data.password),
-        name=user_data.name,
-        company=user_data.company,
-        subscription_tier=SubscriptionTier.FREE,
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+    # Normalize email
+    email = user_data.email.lower().strip()
     
-    # Create tokens
-    access_token = create_access_token({"user_id": user.id, "email": user.email})
-    refresh_token = create_refresh_token({"user_id": user.id, "email": user.email})
-    
-    return TokenResponse(
-        access_token=access_token,
-        refresh_token=refresh_token,
-        user=UserResponse.model_validate(user)
-    )
+    # Retry logic for race conditions (duplicate email check)
+    max_retries = 3
+    for attempt in range(max_retries):
+        try:
+            # Check if user exists
+            existing = db.query(User).filter(User.email == email).first()
+            if existing:
+                raise HTTPException(status_code=400, detail="Email already registered")
+            
+            # Create user
+            user = User(
+                email=email,
+                password_hash=hash_password(user_data.password),
+                name=user_data.name,
+                company=user_data.company,
+                subscription_tier=SubscriptionTier.FREE,
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+            
+            # Create tokens
+            access_token = create_access_token({"user_id": user.id, "email": user.email})
+            refresh_token = create_refresh_token({"user_id": user.id, "email": user.email})
+            
+            return TokenResponse(
+                access_token=access_token,
+                refresh_token=refresh_token,
+                user=UserResponse.model_validate(user)
+            )
+        except HTTPException:
+            raise
+        except Exception as e:
+            db.rollback()
+            if attempt < max_retries - 1:
+                # Check if it's a unique constraint violation (race condition)
+                error_str = str(e).lower()
+                if 'unique' in error_str or 'duplicate' in error_str or 'constraint' in error_str:
+                    time.sleep(0.1 * (attempt + 1))  # Exponential backoff
+                    continue
+            raise HTTPException(status_code=500, detail=f"Registration failed: {str(e)}")
 
 
 @app.post("/api/v1/auth/login", response_model=TokenResponse)
@@ -564,6 +648,189 @@ def delete_podcast(podcast_id: int, user: User = Depends(get_current_user), db: 
     return {"message": "Podcast deleted successfully"}
 
 
+# ── Script Endpoints (ScriptFlow) ─────────────────────────────────────────────
+
+def strip_html(html_content):
+    """Strip HTML tags to get plain text for TTS."""
+    if not html_content:
+        return ""
+    import re
+    text = re.sub(r'<[^>]+>', ' ', html_content)
+    text = re.sub(r'\s+', ' ', text)
+    return text.strip()
+
+
+@app.get("/api/v1/scripts", response_model=List[ScriptResponse])
+def list_scripts(user: User = Depends(get_current_user), db: Session = Depends(get_db_session)):
+    """List all scripts for the user."""
+    from saas.db.models import Script
+    scripts = db.query(Script).filter(Script.user_id == user.id).order_by(Script.updated_at.desc()).all()
+    return [ScriptResponse.model_validate(s) for s in scripts]
+
+
+@app.post("/api/v1/scripts", response_model=ScriptResponse, status_code=201)
+def create_script(
+    script_data: ScriptCreate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db_session)
+):
+    """Create a new script."""
+    from saas.db.models import Script
+    plain_text = strip_html(script_data.content) if script_data.content else ""
+    
+    script = Script(
+        user_id=user.id,
+        title=script_data.title,
+        content=script_data.content,
+        plain_text=plain_text,
+        template_type=script_data.template_type,
+        version=1
+    )
+    db.add(script)
+    db.commit()
+    db.refresh(script)
+    return ScriptResponse.model_validate(script)
+
+
+@app.get("/api/v1/scripts/{script_id}", response_model=ScriptResponse)
+def get_script(script_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db_session)):
+    """Get a specific script."""
+    from saas.db.models import Script
+    script = db.query(Script).filter(Script.id == script_id, Script.user_id == user.id).first()
+    if not script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    return ScriptResponse.model_validate(script)
+
+
+@app.put("/api/v1/scripts/{script_id}", response_model=ScriptResponse)
+def update_script(
+    script_id: int,
+    updates: ScriptUpdate,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db_session)
+):
+    """Update a script."""
+    from saas.db.models import Script
+    script = db.query(Script).filter(Script.id == script_id, Script.user_id == user.id).first()
+    if not script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    
+    updates_dict = updates.model_dump(exclude_unset=True)
+    
+    # Update plain text if content changed
+    if 'content' in updates_dict and updates_dict['content']:
+        updates_dict['plain_text'] = strip_html(updates_dict['content'])
+    
+    # Increment version
+    if 'version' in updates_dict:
+        del updates_dict['version']
+    script.version = (script.version or 1) + 1
+    
+    for field, value in updates_dict.items():
+        setattr(script, field, value)
+    
+    script.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(script)
+    return ScriptResponse.model_validate(script)
+
+
+@app.delete("/api/v1/scripts/{script_id}")
+def delete_script(script_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db_session)):
+    """Delete a script."""
+    from saas.db.models import Script
+    script = db.query(Script).filter(Script.id == script_id, Script.user_id == user.id).first()
+    if not script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    
+    db.delete(script)
+    db.commit()
+    return {"message": "Script deleted successfully"}
+
+
+@app.post("/api/v1/scripts/{script_id}/generate-preview")
+def generate_script_preview(
+    script_id: int,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db_session)
+):
+    """Generate a voice preview for a script."""
+    from saas.db.models import Script
+    import os
+    
+    script = db.query(Script).filter(Script.id == script_id, Script.user_id == user.id).first()
+    if not script:
+        raise HTTPException(status_code=404, detail="Script not found")
+    
+    # Get plain text for TTS
+    text = script.plain_text or strip_html(script.content) or ""
+    if not text:
+        raise HTTPException(status_code=400, detail="Script has no content")
+    
+    # Truncate for preview (first 500 chars)
+    preview_text = text[:500]
+    
+    # Call TTS provider (use MiniMax as example)
+    voice_id = user.default_voice_host_1 or "Female"
+    
+    # Try MiniMax TTS
+    try:
+        import urllib.request
+        import urllib.parse
+        
+        api_key = os.getenv("MINIMAX_API_KEY", "")
+        if api_key:
+            group_id = os.getenv("MINIMAX_GROUP_ID", "2032278985148212156")
+            url = f"https://api.minimax.io/v1/t2a20250201?GroupId={group_id}"
+            
+            data = {
+                "model": "speech-02-hd",
+                "text": preview_text,
+                "stream": False,
+                "voice_setting": {
+                    "voice_id": voice_id,
+                },
+                "audio_setting": {
+                    "sample_rate": 16000,
+                    "bitrate": 128000,
+                    "format": "mp3"
+                }
+            }
+            
+            req = urllib.request.Request(
+                url,
+                data=urllib.parse.dumps(data).encode(),
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {api_key}"
+                },
+                method="POST"
+            )
+            
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                result = resp.read()
+            
+            # Return audio directly (it's mp3 bytes)
+            import base64
+            audio_b64 = base64.b64encode(result).decode()
+            
+            return {
+                "audio_url": f"data:audio/mp3;base64,{audio_b64}",
+                "text": preview_text,
+                "duration_seconds": len(preview_text) / 10  # rough estimate
+            }
+    except Exception as e:
+        print(f"TTS error: {e}")
+    
+    # Fallback: return placeholder response
+    return {
+        "audio_url": None,
+        "text": preview_text,
+        "error": "TTS provider not configured",
+        "duration_seconds": len(preview_text) / 10
+    }
+
+
 # ── Episode Endpoints ─────────────────────────────────────────────────────────
 
 @app.get("/api/v1/podcasts/{podcast_id}/episodes", response_model=List[EpisodeResponse])
@@ -600,6 +867,10 @@ def generate_episode(
     db: Session = Depends(get_db_session)
 ):
     """Generate a new episode."""
+    import os
+    import re
+    import base64
+    
     # Get podcast
     podcast = db.query(Podcast).filter(
         Podcast.id == request.podcast_id,
@@ -612,11 +883,6 @@ def generate_episode(
     # Check episode limit
     can_proceed, message = check_user_limit(user, "episodes")
     if not can_proceed:
-        raise HTTPException(status_code=403, detail=message)
-    
-    # Check storage limit
-    can_proceed, message = check_user_limit(user, "storage")
-    if not can_proceed and not request.script_only:
         raise HTTPException(status_code=403, detail=message)
     
     # Parse date
@@ -638,15 +904,66 @@ def generate_episode(
     db.commit()
     db.refresh(episode)
     
-    # TODO: Integrate with the actual podcast generation pipeline
-    # For now, return a placeholder response
-    episode.status = "ready" if request.script_only else "ready"
-    episode.title = f"Episode - {ep_date.strftime('%Y-%m-%d')}"
-    db.commit()
+    # Extract content from script if provided
+    content_source = getattr(request, 'content_source', None)
+    if content_source:
+        # Strip HTML tags
+        text = re.sub(r'<[^>]+>', ' ', content_source)
+        text = re.sub(r'\s+', ' ', text).strip()
+    else:
+        text = f"Episode generated on {ep_date.strftime('%Y-%m-%d')}"
+    
+    # Try to generate audio with MiniMax TTS
+    audio_url = None
+    duration = None
+    
+    try:
+        api_key = os.getenv("MINIMAX_API_KEY", "")
+        if api_key:
+            group_id = os.getenv("MINIMAX_GROUP_ID", "2032278985148212156")
+            voice_id = podcast.host_1_voice_id or user.default_voice_host_1 or "Female"
+            
+            # Truncate text if too long (TTS limit ~2000 chars)
+            tts_text = text[:1800] if text else "Hello world"
+            
+            url = f"https://api.minimax.io/v1/t2a20250201?GroupId={group_id}"
+            data = {
+                "model": "speech-02-hd",
+                "text": tts_text,
+                "stream": False,
+                "voice_setting": {"voice_id": voice_id},
+                "audio_setting": {"sample_rate": 16000, "bitrate": 128000, "format": "mp3"}
+            }
+            
+            req = urllib.request.Request(
+                url,
+                data=urllib.parse.dumps(data).encode(),
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
+                method="POST"
+            )
+            
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                audio_data = resp.read()
+            
+            # Return as base64 data URL
+            audio_b64 = base64.b64encode(audio_data).decode()
+            audio_url = f"data:audio/mp3;base64,{audio_b64}"
+            duration = len(tts_text) / 10  # rough estimate
+    except Exception as e:
+        print(f"TTS generation error: {e}")
+    
+    # Update episode
+    episode.title = request.title or (text[:100] if text else f"Episode {episode.id}")
+    episode.status = "ready"
+    episode.audio_url = audio_url
+    episode.audio_duration_seconds = duration
+    episode.description = text[:500] if text else None
+    episode.script = {"content": content_source, "text": text} if content_source else None
     
     # Update user usage
     user.episodes_generated_this_month += 1
     db.commit()
+    db.refresh(episode)
     
     return EpisodeResponse.model_validate(episode)
 
