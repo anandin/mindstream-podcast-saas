@@ -848,6 +848,16 @@ def list_episodes(
     return [EpisodeResponse.model_validate(e) for e in episodes]
 
 
+@app.post("/api/v1/episodes/generate", response_model=EpisodeResponse)
+def generate_episode(
+    request: GenerateEpisodeRequest,
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db_session)
+):
+    """Generate a new episode."""
+    import os
+
+
 @app.get("/api/v1/episodes/{episode_id}", response_model=EpisodeResponse)
 def get_episode(episode_id: int, user: User = Depends(get_current_user), db: Session = Depends(get_db_session)):
     """Get a specific episode."""
@@ -858,16 +868,6 @@ def get_episode(episode_id: int, user: User = Depends(get_current_user), db: Ses
     if not episode:
         raise HTTPException(status_code=404, detail="Episode not found")
     return EpisodeResponse.model_validate(episode)
-
-
-@app.post("/api/v1/episodes/generate", response_model=EpisodeResponse)
-def generate_episode(
-    request: GenerateEpisodeRequest,
-    user: User = Depends(get_current_user),
-    db: Session = Depends(get_db_session)
-):
-    """Generate a new episode."""
-    import os
     import re
     import base64
     
