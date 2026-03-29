@@ -184,10 +184,16 @@ class Episode(Base):
     ai_completion_tokens = Column(Integer)
     estimated_cost_usd = Column(Float)
     
+    # Grow Layer — SEO + discoverability
+    seo_title = Column(String(500))          # AI-optimised title for search
+    show_notes = Column(Text)               # Markdown: summary, key points, excerpts
+    audiogram_url = Column(String(1000))    # Waveform video stub (future)
+    audiogram_status = Column(String(20), default="none")  # none|queued|ready
+
     # Status
     status = Column(String(50), default="draft")  # draft, generating, ready, published, failed
     error_message = Column(Text)
-    
+
     # Relationships
     podcast = relationship("Podcast", back_populates="episodes")
     

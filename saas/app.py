@@ -78,6 +78,10 @@ app.include_router(mcp_router)
 from saas.api.webhooks import router as webhooks_router
 app.include_router(webhooks_router)
 
+# Include Grow Layer (SEO title, show notes, audiogram)
+from saas.api.grow import router as grow_router
+app.include_router(grow_router)
+
 
 @app.on_event("shutdown")
 async def shutdown():

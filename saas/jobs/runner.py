@@ -98,6 +98,8 @@ def _dispatch(job_type: str, payload: dict) -> dict:
         return _generate_episode(payload)
     if job_type == "deliver_webhook":
         return _deliver_webhook(payload)
+    if job_type == "grow_audiogram":
+        return _grow_audiogram(payload)
     raise ValueError(f"Unknown job type: {job_type}")
 
 
@@ -220,5 +222,28 @@ def _deliver_webhook(payload: dict) -> dict:
                 delay_seconds=delay,
             )
         return {"success": success, "attempt": attempt}
+    finally:
+        db.close()
+
+
+def _grow_audiogram(payload: dict) -> dict:
+    """
+    Audiogram generation stub.
+    Full implementation (FFmpeg waveform + Pillow overlay) is a future milestone.
+    Currently just marks the episode audiogram_status as 'failed' with a clear message
+    so the UI can show the right state.
+    """
+    import os
+    from saas.db.models import Episode, get_session
+
+    db = get_session(os.getenv("DATABASE_URL", "sqlite:///./saas_podcast.db"))
+    try:
+        ep = db.query(Episode).filter(Episode.id == payload["episode_id"]).first()
+        if ep:
+            # Stub: mark as failed with informative message until renderer is built
+            ep.audiogram_status = "failed"
+            ep.error_message = "Audiogram renderer not yet implemented — coming in a future release."
+            db.commit()
+        return {"status": "stub", "episode_id": payload["episode_id"]}
     finally:
         db.close()
