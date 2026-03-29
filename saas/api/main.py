@@ -50,25 +50,7 @@ init_db(DATABASE_URL)
 app = FastAPI(
     title="Mind Stream SaaS API",
     description="Podcast generation API for SaaS",
-    version="1.0.0",
-    openapi_tags=[{"name": "auth"}, {"name": "podcasts"}, {"name": "episodes"}, {"name": "api-keys"}],
-    openapi_extra={
-        "components": {
-            "securitySchemes": {
-                "BearerAuth": {
-                    "type": "http",
-                    "scheme": "bearer",
-                    "bearerFormat": "JWT"
-                },
-                "ApiKeyAuth": {
-                    "type": "apiKey",
-                    "in": "header",
-                    "name": "X-API-Key"
-                }
-            }
-        },
-        "security": [{"BearerAuth": []}, {"ApiKeyAuth": []}]
-    }
+    version="1.0.0"
 )
 
 # CORS

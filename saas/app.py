@@ -16,6 +16,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 # Import SaaS modules first
 from fastapi import FastAPI, Request, Response
+from fastapi.openapi.utils import get_openapi
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse
 from sqlalchemy.orm import Session
@@ -54,6 +55,27 @@ app.add_middleware(
 
 # Include API routes - routes already have /api/v1 prefix
 app.include_router(api_app.router)
+
+
+# Custom OpenAPI schema: add security schemes so Swagger shows auth on all routes
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    schema = get_openapi(
+        title=app.title,
+        version=app.version,
+        description=app.description,
+        routes=app.routes,
+    )
+    schema.setdefault("components", {})["securitySchemes"] = {
+        "BearerAuth": {"type": "http", "scheme": "bearer", "bearerFormat": "JWT"},
+        "ApiKeyAuth": {"type": "apiKey", "in": "header", "name": "X-API-Key"},
+    }
+    schema["security"] = [{"BearerAuth": []}, {"ApiKeyAuth": []}]
+    app.openapi_schema = schema
+    return schema
+
+app.openapi = custom_openapi
 
 
 # ── Static Files ───────────────────────────────────────────────────────────
