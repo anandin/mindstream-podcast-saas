@@ -103,13 +103,27 @@ async def api_docs():
 
 # ── Error Handlers ───────────────────────────────────────────────────────
 
+from fastapi.exceptions import HTTPException as FastAPIHTTPException
+
+
+@app.exception_handler(FastAPIHTTPException)
+async def http_exception_handler(request, exc):
+    if request.url.path.startswith("/api/"):
+        return JSONResponse({"detail": exc.detail}, status_code=exc.status_code)
+    return HTMLResponse(f"<h1>{exc.status_code} - Error</h1>", status_code=exc.status_code)
+
+
 @app.exception_handler(404)
 async def not_found(request, exc):
+    if request.url.path.startswith("/api/"):
+        return JSONResponse({"detail": "Not found"}, status_code=404)
     return HTMLResponse("<h1>404 - Not Found</h1>", status_code=404)
 
 
 @app.exception_handler(500)
 async def server_error(request, exc):
+    if request.url.path.startswith("/api/"):
+        return JSONResponse({"detail": "Internal server error"}, status_code=500)
     return HTMLResponse("<h1>500 - Server Error</h1>", status_code=500)
 
 

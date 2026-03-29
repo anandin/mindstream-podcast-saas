@@ -472,7 +472,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
             await loadUser();
             await loadPodcasts();
             await loadEpisodes();
-            await loadApiKeys();
+            if (state.user && state.user.subscription_tier !== 'free') {
+                await loadApiKeys();
+            }
         }
         
         async function loadUser() {

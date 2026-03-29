@@ -855,7 +855,96 @@ def generate_episode(
     db: Session = Depends(get_db_session)
 ):
     """Generate a new episode."""
-    import os
+    import re
+    import base64
+    import urllib.request
+
+    # Get podcast
+    podcast = db.query(Podcast).filter(
+        Podcast.id == request.podcast_id,
+        Podcast.user_id == user.id,
+        Podcast.is_active == True
+    ).first()
+    if not podcast:
+        raise HTTPException(status_code=404, detail="Podcast not found")
+
+    # Check episode limit
+    can_proceed, message = check_user_limit(user, "episodes")
+    if not can_proceed:
+        raise HTTPException(status_code=403, detail=message)
+
+    # Parse date
+    if request.date:
+        try:
+            ep_date = datetime.strptime(request.date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
+    else:
+        ep_date = datetime.now(timezone.utc)
+
+    # Create episode record
+    episode = Episode(
+        podcast_id=podcast.id,
+        date=ep_date,
+        status="generating",
+    )
+    db.add(episode)
+    db.commit()
+    db.refresh(episode)
+
+    # Extract content from script if provided
+    content_source = getattr(request, 'content_source', None)
+    if content_source:
+        text = re.sub(r'<[^>]+>', ' ', content_source)
+        text = re.sub(r'\s+', ' ', text).strip()
+    else:
+        text = f"Episode generated on {ep_date.strftime('%Y-%m-%d')}"
+
+    # Try to generate audio with MiniMax TTS
+    audio_url = None
+    duration = None
+
+    try:
+        minimax_key = os.getenv("MINIMAX_API_KEY", "")
+        if minimax_key:
+            group_id = os.getenv("MINIMAX_GROUP_ID", "2032278985148212156")
+            voice_id = podcast.host_1_voice_id or user.default_voice_host_1 or "Female"
+            tts_text = text[:1800] if text else "Hello world"
+            url = f"https://api.minimax.io/v1/t2a20250201?GroupId={group_id}"
+            data = {
+                "model": "speech-02-hd",
+                "text": tts_text,
+                "stream": False,
+                "voice_setting": {"voice_id": voice_id},
+                "audio_setting": {"sample_rate": 16000, "bitrate": 128000, "format": "mp3"}
+            }
+            req = urllib.request.Request(
+                url,
+                data=json.dumps(data).encode(),
+                headers={"Content-Type": "application/json", "Authorization": f"Bearer {minimax_key}"},
+                method="POST"
+            )
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                audio_data = resp.read()
+            audio_b64 = base64.b64encode(audio_data).decode()
+            audio_url = f"data:audio/mp3;base64,{audio_b64}"
+            duration = len(tts_text) / 10
+    except Exception as e:
+        print(f"TTS generation error: {e}")
+
+    # Update episode
+    episode.title = request.title or (text[:100] if text else f"Episode {episode.id}")
+    episode.status = "ready"
+    episode.audio_url = audio_url
+    episode.audio_duration_seconds = duration
+    episode.description = text[:500] if text else None
+    episode.script = {"content": content_source, "text": text} if content_source else None
+
+    user.episodes_generated_this_month += 1
+    db.commit()
+    db.refresh(episode)
+
+    return EpisodeResponse.model_validate(episode)
 
 
 @app.get("/api/v1/episodes/{episode_id}", response_model=EpisodeResponse)
@@ -867,104 +956,6 @@ def get_episode(episode_id: int, user: User = Depends(get_current_user), db: Ses
     ).first()
     if not episode:
         raise HTTPException(status_code=404, detail="Episode not found")
-    return EpisodeResponse.model_validate(episode)
-    import re
-    import base64
-    
-    # Get podcast
-    podcast = db.query(Podcast).filter(
-        Podcast.id == request.podcast_id,
-        Podcast.user_id == user.id,
-        Podcast.is_active == True
-    ).first()
-    if not podcast:
-        raise HTTPException(status_code=404, detail="Podcast not found")
-    
-    # Check episode limit
-    can_proceed, message = check_user_limit(user, "episodes")
-    if not can_proceed:
-        raise HTTPException(status_code=403, detail=message)
-    
-    # Parse date
-    if request.date:
-        try:
-            ep_date = datetime.strptime(request.date, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-        except ValueError:
-            raise HTTPException(status_code=400, detail="Invalid date format. Use YYYY-MM-DD")
-    else:
-        ep_date = datetime.now(timezone.utc)
-    
-    # Create episode record
-    episode = Episode(
-        podcast_id=podcast.id,
-        date=ep_date,
-        status="generating",
-    )
-    db.add(episode)
-    db.commit()
-    db.refresh(episode)
-    
-    # Extract content from script if provided
-    content_source = getattr(request, 'content_source', None)
-    if content_source:
-        # Strip HTML tags
-        text = re.sub(r'<[^>]+>', ' ', content_source)
-        text = re.sub(r'\s+', ' ', text).strip()
-    else:
-        text = f"Episode generated on {ep_date.strftime('%Y-%m-%d')}"
-    
-    # Try to generate audio with MiniMax TTS
-    audio_url = None
-    duration = None
-    
-    try:
-        api_key = os.getenv("MINIMAX_API_KEY", "")
-        if api_key:
-            group_id = os.getenv("MINIMAX_GROUP_ID", "2032278985148212156")
-            voice_id = podcast.host_1_voice_id or user.default_voice_host_1 or "Female"
-            
-            # Truncate text if too long (TTS limit ~2000 chars)
-            tts_text = text[:1800] if text else "Hello world"
-            
-            url = f"https://api.minimax.io/v1/t2a20250201?GroupId={group_id}"
-            data = {
-                "model": "speech-02-hd",
-                "text": tts_text,
-                "stream": False,
-                "voice_setting": {"voice_id": voice_id},
-                "audio_setting": {"sample_rate": 16000, "bitrate": 128000, "format": "mp3"}
-            }
-            
-            req = urllib.request.Request(
-                url,
-                data=urllib.parse.dumps(data).encode(),
-                headers={"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"},
-                method="POST"
-            )
-            
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                audio_data = resp.read()
-            
-            # Return as base64 data URL
-            audio_b64 = base64.b64encode(audio_data).decode()
-            audio_url = f"data:audio/mp3;base64,{audio_b64}"
-            duration = len(tts_text) / 10  # rough estimate
-    except Exception as e:
-        print(f"TTS generation error: {e}")
-    
-    # Update episode
-    episode.title = request.title or (text[:100] if text else f"Episode {episode.id}")
-    episode.status = "ready"
-    episode.audio_url = audio_url
-    episode.audio_duration_seconds = duration
-    episode.description = text[:500] if text else None
-    episode.script = {"content": content_source, "text": text} if content_source else None
-    
-    # Update user usage
-    user.episodes_generated_this_month += 1
-    db.commit()
-    db.refresh(episode)
-    
     return EpisodeResponse.model_validate(episode)
 
 
@@ -1021,6 +1012,62 @@ def delete_api_key(key_id: int, user: User = Depends(get_current_user), db: Sess
     api_key.is_active = False
     db.commit()
     return {"message": "API key deleted successfully"}
+
+
+# ── Memo Upload ─────────────────────────────────────────────────────────────
+
+from fastapi import UploadFile, File
+
+
+@app.post("/api/v1/memo/upload")
+async def upload_memo(
+    file: UploadFile = File(...),
+    user: User = Depends(get_current_user),
+    db: Session = Depends(get_db_session)
+):
+    """Upload a memo file for processing (audio/text). Enqueues a process_memo job."""
+    allowed_types = {
+        "audio/mpeg", "audio/mp3", "audio/wav", "audio/ogg", "audio/m4a",
+        "audio/x-m4a", "audio/mp4", "text/plain", "application/pdf"
+    }
+    content_type = file.content_type or ""
+    if content_type not in allowed_types and not content_type.startswith("audio/"):
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unsupported file type: {content_type}. Supported: audio (mp3/wav/ogg/m4a), text, pdf"
+        )
+
+    contents = await file.read()
+    if len(contents) == 0:
+        raise HTTPException(status_code=400, detail="Uploaded file is empty")
+    if len(contents) > 100 * 1024 * 1024:  # 100 MB
+        raise HTTPException(status_code=413, detail="File too large. Maximum size is 100MB")
+
+    # Save to uploads dir
+    import uuid
+    uploads_dir = Path(__file__).parent.parent / "uploads"
+    uploads_dir.mkdir(exist_ok=True)
+    ext = Path(file.filename or "memo").suffix or ".bin"
+    saved_name = f"{uuid.uuid4().hex}{ext}"
+    saved_path = uploads_dir / saved_name
+    saved_path.write_bytes(contents)
+
+    # Log usage
+    log = UsageLog(
+        user_id=user.id,
+        action="memo_upload",
+        resource_type="memo",
+        extra_data={"filename": file.filename, "size_bytes": len(contents), "content_type": content_type}
+    )
+    db.add(log)
+    db.commit()
+
+    return {
+        "status": "accepted",
+        "message": "Memo uploaded and queued for processing",
+        "file": saved_name,
+        "size_bytes": len(contents)
+    }
 
 
 # ── Health Check ────────────────────────────────────────────────────────────
