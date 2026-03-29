@@ -825,7 +825,7 @@ This language shift:
 |------|-----|
 | SQLite in production | Data loss risk, no concurrent writes, can't scale |
 | PodcastForge | Enterprise needs traction; this is premature complexity |
-| Custom voice cloning | Requires training data, trust, legal complexity. Use ElevenLabs API |
+| Custom voice cloning | Requires training data, trust, legal complexity. Use MiniMax TTS API |
 | Spaced repetition in BrainCast | Solving a non-existent user problem (app store feature theater) |
 | Wildcard CORS (`*`) | Security risk; replace with explicit origin allowlist |
 | localStorage for scripts | Silent data loss on browser clear; move to database |
@@ -1069,7 +1069,7 @@ ANTHROPIC_API_KEY=sk-ant-...
 
 # Audio
 ASSEMBLYAI_API_KEY=...
-ELEVENLABS_API_KEY=...
+MINIMAX_API_KEY=...
 
 # Storage
 R2_ACCOUNT_ID=...
