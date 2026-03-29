@@ -221,6 +221,40 @@ class UsageLog(Base):
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
+class Webhook(Base):
+    """Registered developer webhooks for CastAPI event delivery."""
+    __tablename__ = "webhooks"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    url = Column(String(2000), nullable=False)
+    secret = Column(String(255), nullable=False)  # HMAC signing secret
+    events = Column(JSON, nullable=False, default=list)  # ["episode.ready", "episode.failed"]
+    is_active = Column(Boolean, default=True)
+    last_triggered_at = Column(DateTime(timezone=True))
+    failure_count = Column(Integer, default=0)  # disable after 5 consecutive failures
+
+    user = relationship("User")
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class WebhookDelivery(Base):
+    """Delivery log for each webhook attempt."""
+    __tablename__ = "webhook_deliveries"
+
+    id = Column(Integer, primary_key=True)
+    webhook_id = Column(Integer, ForeignKey("webhooks.id"), nullable=False)
+    event = Column(String(100), nullable=False)
+    payload = Column(JSON, nullable=False)
+    attempt = Column(Integer, default=1)
+    status_code = Column(Integer)
+    response_body = Column(Text)
+    success = Column(Boolean, default=False)
+    delivered_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    webhook = relationship("Webhook")
+
+
 class Job(Base):
     """Background job queue for async processing tasks."""
     __tablename__ = "jobs"

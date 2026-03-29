@@ -70,6 +70,14 @@ app.include_router(api_app.router)
 from saas.api.memo import router as memo_router
 app.include_router(memo_router)
 
+# Include CastAPI MCP server
+from saas.api.mcp import router as mcp_router
+app.include_router(mcp_router)
+
+# Include webhook management
+from saas.api.webhooks import router as webhooks_router
+app.include_router(webhooks_router)
+
 
 @app.on_event("shutdown")
 async def shutdown():
