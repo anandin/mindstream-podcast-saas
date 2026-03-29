@@ -133,6 +133,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <nav>
             <a href="#dashboard" class="active" onclick="showSection('dashboard')">Dashboard</a>
             <a href="#podcasts" onclick="showSection('podcasts')">Podcasts</a>
+            <a href="#scripts" onclick="showSection('scripts')">✍️ ScriptFlow</a>
             <a href="#settings" onclick="showSection('settings')">Settings</a>
             <a href="#billing" onclick="showSection('billing')">Billing</a>
         </nav>
@@ -211,6 +212,89 @@ DASHBOARD_HTML = """<!DOCTYPE html>
             </div>
         </section>
         
+        <!-- ScriptFlow Section -->
+        <section id="section-scripts" style="display: none;">
+            <!-- Load Tiptap from CDN -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" />
+            <style>
+                .scriptflow-layout { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+                .script-list-panel { display: flex; flex-direction: column; gap: 10px; }
+                .script-item { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 12px; cursor: pointer; transition: border-color 0.2s; }
+                .script-item:hover, .script-item.active { border-color: #58a6ff; }
+                .script-item-title { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+                .script-item-meta { font-size: 11px; color: #8b949e; margin-top: 4px; }
+                .editor-panel { display: flex; flex-direction: column; gap: 12px; }
+                #tiptap-toolbar { display: flex; gap: 6px; flex-wrap: wrap; background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 8px; }
+                .toolbar-btn { background: none; border: 1px solid #30363d; color: #c9d1d9; border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 13px; transition: background 0.15s; }
+                .toolbar-btn:hover, .toolbar-btn.is-active { background: #30363d; color: #fff; }
+                #tiptap-editor { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 16px; min-height: 400px; outline: none; font-size: 14px; line-height: 1.7; }
+                #tiptap-editor:focus-within { border-color: #58a6ff; }
+                #tiptap-editor .ProseMirror { min-height: 370px; outline: none; }
+                #tiptap-editor .ProseMirror p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: #4d5566; pointer-events: none; }
+                #tiptap-editor h1, #tiptap-editor h2, #tiptap-editor h3 { color: #e6edf3; margin: 12px 0 6px; }
+                #tiptap-editor blockquote { border-left: 3px solid #58a6ff; padding-left: 12px; color: #8b949e; }
+                #tiptap-editor code { background: #0d1117; padding: 2px 6px; border-radius: 3px; font-family: monospace; font-size: 12px; }
+                .voice-preview-panel { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 14px; }
+                .voice-preview-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+                #voice-preview-audio { display: none; margin-top: 10px; width: 100%; }
+            </style>
+            <div class="scriptflow-layout">
+                <!-- Left: Script list -->
+                <div class="script-list-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; font-size: 14px;">My Scripts</span>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;" onclick="newScript()">+ New</button>
+                    </div>
+                    <div id="script-list-items">
+                        <div class="empty"><div class="empty-icon">📝</div><p>No scripts yet</p></div>
+                    </div>
+                </div>
+                <!-- Right: Editor -->
+                <div class="editor-panel">
+                    <div class="card" style="padding: 12px;">
+                        <input type="text" id="script-title-input" class="form-input" placeholder="Script title…" style="font-size: 18px; font-weight: 600; border: none; background: transparent; padding: 4px 0; margin-bottom: 8px;" />
+                        <div id="tiptap-toolbar">
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleBold().run()" title="Bold"><b>B</b></button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleItalic().run()" title="Italic"><i>I</i></button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleHeading({level:1}).run()">H1</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleHeading({level:2}).run()">H2</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleBulletList().run()">• List</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleOrderedList().run()">1. List</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleBlockquote().run()">" Quote</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().toggleCode().run()">Code</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().undo().run()">↩ Undo</button>
+                            <button class="toolbar-btn" onclick="editor.chain().focus().redo().run()">↪ Redo</button>
+                            <span style="flex: 1;"></span>
+                            <button class="btn btn-primary" style="padding: 4px 14px; font-size: 12px;" onclick="saveCurrentScript()">💾 Save</button>
+                            <button class="btn btn-secondary" style="padding: 4px 14px; font-size: 12px;" onclick="deleteCurrentScript()">🗑</button>
+                        </div>
+                        <div id="tiptap-editor"><div class="ProseMirror" contenteditable="true" data-placeholder="Start writing your podcast script…"></div></div>
+                    </div>
+                    <!-- Voice Preview Panel -->
+                    <div class="voice-preview-panel">
+                        <div style="font-weight: 600; font-size: 13px; margin-bottom: 10px;">🎙️ Voice Preview</div>
+                        <div class="voice-preview-controls">
+                            <select class="form-select" id="preview-voice-id" style="width: 200px;">
+                                <option value="male-qn-qingse">Alex (MiniMax Male)</option>
+                                <option value="female-shaonv">Maya (MiniMax Female)</option>
+                                <option value="male-qn-jingying">Jordan (Energetic Male)</option>
+                                <option value="female-yujie">Sam (Professional Female)</option>
+                                <option value="alloy">Alloy (OpenAI)</option>
+                                <option value="nova">Nova (OpenAI Female)</option>
+                            </select>
+                            <select class="form-select" id="preview-provider" style="width: 130px;">
+                                <option value="minimax">MiniMax</option>
+                                <option value="openai">OpenAI</option>
+                            </select>
+                            <button class="btn btn-secondary" onclick="previewVoice()">▶ Preview Voice</button>
+                            <span id="preview-status" style="font-size: 12px; color: #8b949e;"></span>
+                        </div>
+                        <audio id="voice-preview-audio" controls></audio>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Settings Section -->
         <section id="section-settings" style="display: none;">
             <div class="grid">
@@ -473,6 +557,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
             await loadPodcasts();
             await loadEpisodes();
             await loadApiKeys();
+            initTiptap();
+            await loadScripts();
         }
         
         async function loadUser() {
@@ -826,6 +912,149 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         
         // Initialize on load
         init();
+    </script>
+
+    <!-- Tiptap CDN (loaded after DOM) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tiptap/core@2/dist/index.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tiptap/starter-kit@2/dist/index.umd.min.js"></script>
+
+    <script>
+        // ── ScriptFlow ──────────────────────────────────────────────────────────
+        let editor = null;
+        let currentScriptId = null;
+        let scripts = [];
+
+        function initTiptap() {
+            const editorDiv = document.getElementById('tiptap-editor');
+            if (!editorDiv) return;
+            if (typeof tiptapCore !== 'undefined' && typeof tiptapStarterKit !== 'undefined') {
+                editor = new tiptapCore.Editor({
+                    element: editorDiv,
+                    extensions: [tiptapStarterKit.StarterKit],
+                    content: '',
+                    editorProps: { attributes: { class: 'ProseMirror' } }
+                });
+            } else {
+                // Fallback: plain textarea built with DOM APIs (no innerHTML)
+                const ta = document.createElement('textarea');
+                ta.id = 'tiptap-fallback';
+                ta.placeholder = 'Start writing your podcast script\u2026';
+                ta.style.cssText = 'width:100%;min-height:370px;background:transparent;color:#c9d1d9;border:none;outline:none;font-size:14px;line-height:1.7;resize:none;';
+                editorDiv.textContent = '';
+                editorDiv.appendChild(ta);
+                const noop = () => ({ run: () => {} });
+                editor = {
+                    getHTML: () => ta.value,
+                    commands: { setContent: (html) => { ta.value = html.replace(/<[^>]+>/g, ''); } },
+                    chain: () => ({ focus: () => ({ toggleBold: noop, toggleItalic: noop, toggleHeading: () => noop, toggleBulletList: noop, toggleOrderedList: noop, toggleBlockquote: noop, toggleCode: noop, undo: noop, redo: noop }) }),
+                };
+            }
+        }
+
+        async function loadScripts() {
+            try {
+                const res = await apiCall('/scripts');
+                scripts = await res.json();
+                renderScriptList();
+                if (scripts.length > 0) selectScript(scripts[0]);
+            } catch (e) { console.error('Failed to load scripts', e); }
+        }
+
+        function renderScriptList() {
+            const container = document.getElementById('script-list-items');
+            container.textContent = '';
+            if (!scripts.length) {
+                const empty = document.createElement('div');
+                empty.className = 'empty';
+                const icon = document.createElement('div');
+                icon.className = 'empty-icon';
+                icon.textContent = '\U0001F4DD';
+                const p = document.createElement('p');
+                p.textContent = 'No scripts yet';
+                empty.appendChild(icon);
+                empty.appendChild(p);
+                container.appendChild(empty);
+                return;
+            }
+            scripts.forEach(s => {
+                const item = document.createElement('div');
+                item.className = 'script-item' + (s.id === currentScriptId ? ' active' : '');
+                item.addEventListener('click', () => selectScript(s));
+                const titleEl = document.createElement('div');
+                titleEl.className = 'script-item-title';
+                titleEl.textContent = s.title || '(Untitled)';
+                const metaEl = document.createElement('div');
+                metaEl.className = 'script-item-meta';
+                metaEl.textContent = (s.template_type || 'custom') + ' \u00b7 v' + s.version;
+                item.appendChild(titleEl);
+                item.appendChild(metaEl);
+                container.appendChild(item);
+            });
+        }
+
+        function selectScript(s) {
+            currentScriptId = s.id;
+            document.getElementById('script-title-input').value = s.title || '';
+            if (editor) editor.commands.setContent(s.content || '');
+            renderScriptList();
+        }
+
+        function newScript() {
+            currentScriptId = null;
+            document.getElementById('script-title-input').value = 'Untitled Script';
+            if (editor) editor.commands.setContent('');
+            renderScriptList();
+        }
+
+        async function saveCurrentScript() {
+            const title = document.getElementById('script-title-input').value.trim() || 'Untitled Script';
+            const content = editor ? editor.getHTML() : '';
+            try {
+                const endpoint = currentScriptId ? '/scripts/' + currentScriptId : '/scripts';
+                const method = currentScriptId ? 'PUT' : 'POST';
+                const res = await apiCall(endpoint, { method, body: JSON.stringify({ title, content }) });
+                const saved = await res.json();
+                currentScriptId = saved.id;
+                await loadScripts();
+                showToast('Script saved \u2713', 'success');
+            } catch (e) { showToast('Failed to save script', 'error'); }
+        }
+
+        async function deleteCurrentScript() {
+            if (!currentScriptId) return;
+            if (!confirm('Delete this script?')) return;
+            try {
+                await apiCall('/scripts/' + currentScriptId, { method: 'DELETE' });
+                currentScriptId = null;
+                if (editor) editor.commands.setContent('');
+                document.getElementById('script-title-input').value = '';
+                await loadScripts();
+                showToast('Script deleted', 'info');
+            } catch (e) { showToast('Failed to delete script', 'error'); }
+        }
+
+        async function previewVoice() {
+            const statusEl = document.getElementById('preview-status');
+            const audioEl = document.getElementById('voice-preview-audio');
+            const voiceId = document.getElementById('preview-voice-id').value;
+            const provider = document.getElementById('preview-provider').value;
+            let rawText = editor ? editor.getHTML().replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+            if (!rawText) rawText = document.getElementById('script-title-input').value || 'Hello, this is a voice preview.';
+            const text = rawText.slice(0, 200);
+            statusEl.textContent = 'Generating\u2026';
+            audioEl.style.display = 'none';
+            try {
+                const res = await apiCall('/preview/tts', { method: 'POST', body: JSON.stringify({ text, voice_id: voiceId, provider }) });
+                if (!res.ok) { const e = await res.json(); statusEl.textContent = e.detail || 'Error'; return; }
+                const data = await res.json();
+                if (data.audio_url) {
+                    audioEl.src = data.audio_url;
+                    audioEl.style.display = 'block';
+                    audioEl.play().catch(() => {});
+                    statusEl.textContent = 'Playing \u25b6';
+                } else { statusEl.textContent = data.error || 'No audio'; }
+            } catch (e) { statusEl.textContent = 'Request failed'; }
+        }
     </script>
 </body>
 </html>

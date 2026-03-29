@@ -35,6 +35,10 @@ from saas.dashboard.castapi import get_castapi_html
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./saas_podcast.db")
 init_db(DATABASE_URL)
 
+# Start background job scheduler
+from saas.jobs.runner import start_scheduler, stop_scheduler
+start_scheduler()
+
 # Create main app
 app = FastAPI(
     title="Mind Stream SaaS",
@@ -44,9 +48,16 @@ app = FastAPI(
 
 # CORS - add middleware here since include_router drops middleware from api_app
 from fastapi.middleware.cors import CORSMiddleware
+ALLOWED_ORIGINS = [
+    "https://scriptflow.ai",
+    "https://memo.fm",
+    "https://castapi.io",
+    "https://braincast.fm",
+    os.getenv("FRONTEND_URL", "http://localhost:3000"),
+]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure appropriately for production
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -54,6 +65,32 @@ app.add_middleware(
 
 # Include API routes - routes already have /api/v1 prefix
 app.include_router(api_app.router)
+
+# Include Memo.fm routes
+from saas.api.memo import router as memo_router
+app.include_router(memo_router)
+
+# Include CastAPI MCP server
+from saas.api.mcp import router as mcp_router
+app.include_router(mcp_router)
+
+# Include webhook management
+from saas.api.webhooks import router as webhooks_router
+app.include_router(webhooks_router)
+
+# Include Grow Layer (SEO title, show notes, audiogram)
+from saas.api.grow import router as grow_router
+app.include_router(grow_router)
+
+
+@app.on_event("shutdown")
+async def shutdown():
+    stop_scheduler()
+
+
+@app.get("/health")
+async def health():
+    return {"status": "ok", "service": "mindstream"}
 
 
 # ── Static Files ───────────────────────────────────────────────────────────

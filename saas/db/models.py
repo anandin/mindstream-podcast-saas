@@ -3,8 +3,9 @@ Database models for SaaS podcast generator.
 """
 from datetime import datetime, timezone
 from typing import Optional
+import uuid
 from sqlalchemy import (
-    create_engine, Column, Integer, String, Text, DateTime, 
+    create_engine, Column, Integer, String, Text, DateTime,
     Boolean, Float, ForeignKey, Enum, JSON
 )
 from sqlalchemy.orm import declarative_base, relationship, sessionmaker
@@ -42,7 +43,7 @@ class User(Base):
     # Settings
     default_voice_host_1 = Column(String(255), default="21m00Tcm4TlvDq8ikWAM")
     default_voice_host_2 = Column(String(255), default="pNInz6obpgDQGcFmaJgB")
-    default_tts_provider = Column(String(50), default="elevenlabs")  # elevenlabs, openai
+    default_tts_provider = Column(String(50), default="minimax")  # minimax, elevenlabs, openai
     
     # API keys
     api_keys = relationship("APIKey", back_populates="user", cascade="all, delete-orphan")
@@ -104,7 +105,7 @@ class Podcast(Base):
     host_2_voice_id = Column(String(255))
     
     # TTS settings
-    tts_provider = Column(String(50), default="elevenlabs")  # elevenlabs, openai
+    tts_provider = Column(String(50), default="minimax")  # minimax, elevenlabs, openai
     elevenlabs_model = Column(String(100), default="eleven_multilingual_v2")
     openai_voice = Column(String(100), default="alloy")
     
@@ -183,10 +184,16 @@ class Episode(Base):
     ai_completion_tokens = Column(Integer)
     estimated_cost_usd = Column(Float)
     
+    # Grow Layer — SEO + discoverability
+    seo_title = Column(String(500))          # AI-optimised title for search
+    show_notes = Column(Text)               # Markdown: summary, key points, excerpts
+    audiogram_url = Column(String(1000))    # Waveform video stub (future)
+    audiogram_status = Column(String(20), default="none")  # none|queued|ready
+
     # Status
     status = Column(String(50), default="draft")  # draft, generating, ready, published, failed
     error_message = Column(Text)
-    
+
     # Relationships
     podcast = relationship("Podcast", back_populates="episodes")
     
@@ -217,6 +224,58 @@ class UsageLog(Base):
     # Metadata (use extra_data to avoid SQLAlchemy conflict)
     extra_data = Column(JSON, default=dict)
     
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class Webhook(Base):
+    """Registered developer webhooks for CastAPI event delivery."""
+    __tablename__ = "webhooks"
+
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    url = Column(String(2000), nullable=False)
+    secret = Column(String(255), nullable=False)  # HMAC signing secret
+    events = Column(JSON, nullable=False, default=list)  # ["episode.ready", "episode.failed"]
+    is_active = Column(Boolean, default=True)
+    last_triggered_at = Column(DateTime(timezone=True))
+    failure_count = Column(Integer, default=0)  # disable after 5 consecutive failures
+
+    user = relationship("User")
+    created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+
+class WebhookDelivery(Base):
+    """Delivery log for each webhook attempt."""
+    __tablename__ = "webhook_deliveries"
+
+    id = Column(Integer, primary_key=True)
+    webhook_id = Column(Integer, ForeignKey("webhooks.id"), nullable=False)
+    event = Column(String(100), nullable=False)
+    payload = Column(JSON, nullable=False)
+    attempt = Column(Integer, default=1)
+    status_code = Column(Integer)
+    response_body = Column(Text)
+    success = Column(Boolean, default=False)
+    delivered_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+
+    webhook = relationship("Webhook")
+
+
+class Job(Base):
+    """Background job queue for async processing tasks."""
+    __tablename__ = "jobs"
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    type = Column(String(50), nullable=False)  # generate_episode, process_memo, deliver_webhook, grow
+    payload = Column(JSON, nullable=False, default=dict)
+    status = Column(String(20), nullable=False, default="queued")  # queued|running|done|failed
+    attempts = Column(Integer, default=0)
+    max_attempts = Column(Integer, default=3)
+    scheduled_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
+    started_at = Column(DateTime(timezone=True))
+    completed_at = Column(DateTime(timezone=True))
+    error = Column(Text)
+    result = Column(JSON)
     created_at = Column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
