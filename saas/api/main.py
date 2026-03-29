@@ -239,6 +239,12 @@ class GenerateEpisodeRequest(BaseModel):
 
 # ── Script Models ─────────────────────────────────────────────────────────────
 
+class TTSPreviewRequest(BaseModel):
+    text: str
+    voice_id: str = "male-qn-qingse"
+    provider: str = "minimax"  # minimax | openai
+
+
 class ScriptCreate(BaseModel):
     title: str
     content: Optional[str] = None
@@ -755,6 +761,94 @@ def delete_script(script_id: int, user: User = Depends(get_current_user), db: Se
     return {"message": "Script deleted successfully"}
 
 
+@app.post("/api/v1/preview/tts")
+def preview_tts(
+    body: TTSPreviewRequest,
+    user: User = Depends(get_current_user),
+):
+    """
+    Generate a short TTS audio preview for voice audition.
+    Accepts up to 200 characters of text, returns base64-encoded mp3.
+    Supports providers: minimax, openai.
+    """
+    import json as _json, base64, urllib.request, os
+
+    text = body.text.strip()[:200]
+    if not text:
+        raise HTTPException(status_code=400, detail="text is required")
+
+    provider = body.provider.lower()
+
+    # ── MiniMax ───────────────────────────────────────────────────────────────
+    if provider == "minimax":
+        api_key = os.getenv("MINIMAX_API_KEY", "")
+        if not api_key:
+            raise HTTPException(status_code=503, detail="MiniMax API key not configured")
+        group_id = os.getenv("MINIMAX_GROUP_ID", "")
+        url = f"https://api.minimax.io/v1/t2a20250201"
+        if group_id:
+            url += f"?GroupId={group_id}"
+        payload = {
+            "model": "speech-02-hd",
+            "text": text,
+            "stream": False,
+            "voice_setting": {"voice_id": body.voice_id},
+            "audio_setting": {"sample_rate": 24000, "bitrate": 128000, "format": "mp3"},
+        }
+        req = urllib.request.Request(
+            url,
+            data=_json.dumps(payload).encode(),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                raw = resp.read()
+            # MiniMax returns JSON with audio_file field (base64) or raw mp3
+            try:
+                parsed = _json.loads(raw)
+                audio_bytes = base64.b64decode(parsed.get("audio_file", ""))
+            except Exception:
+                audio_bytes = raw  # raw mp3
+            audio_b64 = base64.b64encode(audio_bytes).decode()
+            return {"audio_url": f"data:audio/mp3;base64,{audio_b64}", "provider": "minimax"}
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"MiniMax TTS error: {exc}")
+
+    # ── OpenAI ────────────────────────────────────────────────────────────────
+    if provider == "openai":
+        api_key = os.getenv("OPENAI_API_KEY", "")
+        if not api_key:
+            raise HTTPException(status_code=503, detail="OpenAI API key not configured")
+        voice_map = {
+            "alloy": "alloy", "nova": "nova", "echo": "echo",
+            "fable": "fable", "onyx": "onyx", "shimmer": "shimmer",
+        }
+        voice = voice_map.get(body.voice_id, "alloy")
+        payload = {"model": "tts-1", "input": text, "voice": voice}
+        req = urllib.request.Request(
+            "https://api.openai.com/v1/audio/speech",
+            data=_json.dumps(payload).encode(),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {api_key}",
+            },
+            method="POST",
+        )
+        try:
+            with urllib.request.urlopen(req, timeout=20) as resp:
+                audio_bytes = resp.read()
+            audio_b64 = base64.b64encode(audio_bytes).decode()
+            return {"audio_url": f"data:audio/mpeg;base64,{audio_b64}", "provider": "openai"}
+        except Exception as exc:
+            raise HTTPException(status_code=502, detail=f"OpenAI TTS error: {exc}")
+
+    raise HTTPException(status_code=400, detail=f"Unknown provider: {provider}. Use minimax or openai.")
+
+
 @app.post("/api/v1/scripts/{script_id}/generate-preview")
 def generate_script_preview(
     script_id: int,
@@ -804,9 +898,10 @@ def generate_script_preview(
                 }
             }
             
+            import json as _json
             req = urllib.request.Request(
                 url,
-                data=urllib.parse.dumps(data).encode(),
+                data=_json.dumps(data).encode(),
                 headers={
                     "Content-Type": "application/json",
                     "Authorization": f"Bearer {api_key}"
