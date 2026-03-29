@@ -1445,6 +1445,6 @@ def get_dashboard_html():
 def get_login_html(default_tab: str = "login"):
     """Return the login HTML template with optional default tab."""
     if default_tab == "register":
-        inject = '<script>document.addEventListener("DOMContentLoaded", function() { showTab("register"); });</script>'
+        inject = '<script>document.addEventListener("DOMContentLoaded", function() { showTab("register"); document.title = "MindStream \u2014 Create Account"; });</script>'
         return LOGIN_HTML.replace("</body>", f"{inject}</body>")
     return LOGIN_HTML

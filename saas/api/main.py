@@ -50,7 +50,25 @@ init_db(DATABASE_URL)
 app = FastAPI(
     title="Mind Stream SaaS API",
     description="Podcast generation API for SaaS",
-    version="1.0.0"
+    version="1.0.0",
+    openapi_tags=[{"name": "auth"}, {"name": "podcasts"}, {"name": "episodes"}, {"name": "api-keys"}],
+    openapi_extra={
+        "components": {
+            "securitySchemes": {
+                "BearerAuth": {
+                    "type": "http",
+                    "scheme": "bearer",
+                    "bearerFormat": "JWT"
+                },
+                "ApiKeyAuth": {
+                    "type": "apiKey",
+                    "in": "header",
+                    "name": "X-API-Key"
+                }
+            }
+        },
+        "security": [{"BearerAuth": []}, {"ApiKeyAuth": []}]
+    }
 )
 
 # CORS
@@ -822,13 +840,11 @@ def generate_script_preview(
     except Exception as e:
         print(f"TTS error: {e}")
     
-    # Fallback: return placeholder response
-    return {
-        "audio_url": None,
-        "text": preview_text,
-        "error": "TTS provider not configured",
-        "duration_seconds": len(preview_text) / 10
-    }
+    # TTS provider not configured or failed
+    raise HTTPException(
+        status_code=503,
+        detail="TTS provider not configured. Set MINIMAX_API_KEY to enable audio preview."
+    )
 
 
 # ── Episode Endpoints ─────────────────────────────────────────────────────────
