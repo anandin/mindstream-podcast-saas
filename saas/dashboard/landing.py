@@ -566,23 +566,147 @@ LANDING_HTML = """<!DOCTYPE html>
         }
         
         /* Responsive */
+        /* Personas Section */
+        .personas {
+            padding: 100px 0;
+            background: var(--bg-secondary);
+        }
+
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .persona-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 28px 24px;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .persona-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-3px);
+        }
+
+        .persona-icon {
+            font-size: 36px;
+            margin-bottom: 12px;
+        }
+
+        .persona-product {
+            font-size: 15px;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 4px;
+        }
+
+        .persona-who {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            margin-bottom: 10px;
+        }
+
+        .persona-desc {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Mobile hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            padding: 6px;
+            background: none;
+            border: none;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.2s;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 61px;
+            left: 0;
+            right: 0;
+            background: rgba(10, 10, 15, 0.98);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 24px 20px;
+            z-index: 99;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mobile-menu.open { display: flex; }
+
+        .mobile-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: color 0.2s;
+        }
+
+        .mobile-menu a:hover { color: var(--text-primary); }
+        .mobile-menu a:last-child { border-bottom: none; }
+
+        .mobile-menu .btn {
+            margin-top: 8px;
+            text-align: center;
+        }
+
         @media (max-width: 768px) {
             nav {
                 display: none;
             }
-            
+
+            .hamburger {
+                display: flex;
+            }
+
             .hero-stats {
                 flex-direction: column;
                 gap: 24px;
             }
-            
+
             .pricing-grid {
                 grid-template-columns: 1fr;
             }
-            
+
+            .personas-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             footer .container {
                 flex-direction: column;
                 text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .personas-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -597,16 +721,28 @@ LANDING_HTML = """<!DOCTYPE html>
                 <span>Mind Stream</span>
             </div>
             <nav>
+                <a href=\"#for-you\">Products</a>
                 <a href=\"#features\">Features</a>
-                <a href=\"#how-it-works\">How It Works</a>
                 <a href=\"#pricing\">Pricing</a>
+                <a href=\"/castapi\">CastAPI</a>
                 <div class=\"nav-cta\">
                     <a href=\"/login\" class=\"btn btn-ghost\">Sign In</a>
                     <a href=\"/register\" class=\"btn btn-primary\">Start Free</a>
                 </div>
             </nav>
+            <button class=\"hamburger\" id=\"hamburger\" onclick=\"toggleMenu()\" aria-label=\"Menu\">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
+    <div class=\"mobile-menu\" id=\"mobile-menu\">
+        <a href=\"#for-you\" onclick=\"toggleMenu()\">Products</a>
+        <a href=\"#features\" onclick=\"toggleMenu()\">Features</a>
+        <a href=\"#pricing\" onclick=\"toggleMenu()\">Pricing</a>
+        <a href=\"/castapi\">CastAPI (Developers)</a>
+        <a href=\"/login\" class=\"btn btn-ghost\">Sign In</a>
+        <a href=\"/register\" class=\"btn btn-primary\">Start Free</a>
+    </div>
     
     <section class=\"hero\">
         <div class=\"container\">
@@ -630,16 +766,16 @@ LANDING_HTML = """<!DOCTYPE html>
                 
                 <div class=\"hero-stats\">
                     <div class=\"stat\">
-                        <div class=\"stat-value\">50K+</div>
-                        <div class=\"stat-label\">Podcasts Generated</div>
+                        <div class=\"stat-value\">5</div>
+                        <div class=\"stat-label\">Specialized Products</div>
                     </div>
                     <div class=\"stat\">
                         <div class=\"stat-value\">3</div>
                         <div class=\"stat-label\">AI Voice Providers</div>
                     </div>
                     <div class=\"stat\">
-                        <div class=\"stat-value\">4.9★</div>
-                        <div class=\"stat-label\">User Rating</div>
+                        <div class=\"stat-value\">$0</div>
+                        <div class=\"stat-label\">To Start</div>
                     </div>
                 </div>
             </div>
@@ -696,6 +832,50 @@ LANDING_HTML = """<!DOCTYPE html>
         </div>
     </section>
     
+    <section class=\"personas\" id=\"for-you\">
+        <div class=\"container\">
+            <div class=\"section-header\">
+                <div class=\"section-label\">Built For You</div>
+                <h2 class=\"section-title\">Five products, one platform</h2>
+                <p class=\"section-subtitle\">
+                    Each product is purpose-built for a specific workflow — pick yours.
+                </p>
+            </div>
+            <div class=\"personas-grid\">
+                <div class=\"persona-card\">
+                    <div class=\"persona-icon\">✍️</div>
+                    <div class=\"persona-product\">ScriptFlow</div>
+                    <div class=\"persona-who\">Indie Creators</div>
+                    <div class=\"persona-desc\">WYSIWYG script editor with voice preview. Write, refine, record — no code needed.</div>
+                </div>
+                <div class=\"persona-card\">
+                    <div class=\"persona-icon\">🔌</div>
+                    <div class=\"persona-product\">CastAPI</div>
+                    <div class=\"persona-who\">Developers &amp; AI Agents</div>
+                    <div class=\"persona-desc\">REST API + MCP server for Claude Desktop. Generate podcasts programmatically or inside your AI workflow.</div>
+                </div>
+                <div class=\"persona-card\">
+                    <div class=\"persona-icon\">🎤</div>
+                    <div class=\"persona-product\">VoiceMemo</div>
+                    <div class=\"persona-who\">Thought Leaders</div>
+                    <div class=\"persona-desc\">Record a voice memo, get a polished podcast. Hands-free — from idea to episode in under 5 minutes.</div>
+                </div>
+                <div class=\"persona-card\">
+                    <div class=\"persona-icon\">📻</div>
+                    <div class=\"persona-product\">PodcastForge</div>
+                    <div class=\"persona-who\">Publishers &amp; Teams</div>
+                    <div class=\"persona-desc\">Multi-show management, RSS feeds, and distribution to Spotify and Apple Podcasts at scale.</div>
+                </div>
+                <div class=\"persona-card\">
+                    <div class=\"persona-icon\">🧠</div>
+                    <div class=\"persona-product\">BrainCast</div>
+                    <div class=\"persona-who\">Learners</div>
+                    <div class=\"persona-desc\">Feed it a PDF, paper, or URL and get a learning podcast with spaced-repetition framing.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class=\"how-it-works\" id=\"how-it-works\">
         <div class=\"container\">
             <div class=\"section-header\">
@@ -755,9 +935,9 @@ LANDING_HTML = """<!DOCTYPE html>
                         <li>100 MB storage</li>
                         <li>1 podcast show</li>
                         <li>MiniMax voice (standard)</li>
+                        <li>1 API key (CastAPI)</li>
                         <li class=\"disabled\">Custom voice cloning</li>
                         <li class=\"disabled\">Priority generation</li>
-                        <li class=\"disabled\">API access</li>
                     </ul>
                     <a href=\"/register\" class=\"btn btn-ghost\">Get Started</a>
                 </div>
@@ -838,17 +1018,37 @@ LANDING_HTML = """<!DOCTYPE html>
         document.querySelectorAll('a[href^=\"#\"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
+                toggleMenu(false);
                 const target = document.querySelector(this.getAttribute('href'));
                 if (target) {
                     target.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
-        
-        // Check if user is logged in
+
+        // Mobile menu toggle
+        function toggleMenu(forceClose) {
+            const menu = document.getElementById('mobile-menu');
+            const isOpen = menu.classList.contains('open');
+            if (forceClose === false || isOpen) {
+                menu.classList.remove('open');
+            } else {
+                menu.classList.add('open');
+            }
+        }
+
+        // Close mobile menu on outside click
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('mobile-menu');
+            const btn = document.getElementById('hamburger');
+            if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                menu.classList.remove('open');
+            }
+        });
+
+        // Check if user is logged in — swap CTAs
         const token = localStorage.getItem('access_token');
         if (token) {
-            // If logged in, update CTA buttons
             document.querySelectorAll('.hero-cta .btn-primary').forEach(btn => {
                 btn.textContent = 'Go to Dashboard →';
                 btn.href = '/dashboard';

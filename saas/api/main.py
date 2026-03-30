@@ -960,7 +960,7 @@ def get_episode(episode_id: int, user: User = Depends(get_current_user), db: Ses
 # ── API Key Endpoints ─────────────────────────────────────────────────────────
 
 @app.get("/api/v1/api-keys", response_model=List[APIKeyResponse])
-def list_api_keys(user: User = Depends(require_tier(SubscriptionTier.PRO)), db: Session = Depends(get_db_session)):
+def list_api_keys(user: User = Depends(get_current_user), db: Session = Depends(get_db_session)):
     """List all API keys for the user."""
     keys = db.query(APIKey).filter(APIKey.user_id == user.id).all()
     return [APIKeyResponse.model_validate(k) for k in keys]
@@ -969,12 +969,19 @@ def list_api_keys(user: User = Depends(require_tier(SubscriptionTier.PRO)), db: 
 @app.post("/api/v1/api-keys", response_model=dict)
 def create_api_key(
     key_data: APIKeyCreate,
-    user: User = Depends(require_tier(SubscriptionTier.PRO)),
+    user: User = Depends(get_current_user),
     db: Session = Depends(get_db_session)
 ):
-    """Create a new API key."""
+    """Create a new API key. Free tier limited to 1 key; Pro/Enterprise unlimited."""
+    existing_keys = db.query(APIKey).filter(APIKey.user_id == user.id, APIKey.is_active == True).count()
+    if user.subscription_tier == SubscriptionTier.FREE and existing_keys >= 1:
+        raise HTTPException(
+            status_code=403,
+            detail="Free tier allows 1 API key. Upgrade to Pro for unlimited keys."
+        )
+
     full_key, key_hash, prefix = generate_api_key()
-    
+
     expires_at = None
     if key_data.expires_in_days:
         expires_at = datetime.now(timezone.utc) + timedelta(days=key_data.expires_in_days)
